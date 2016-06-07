@@ -15,31 +15,31 @@ from math import *
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
-            pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
 
-            # Width and height of character
-            self.width = 40
-            self.height = 40
-            self.image = pygame.Surface([self.width,self.height])
-            self.image.fill(red)
-            self.image.set_colorkey(red)
-
-            # Draw rectangle as character on screen
-            pygame.draw.rect(self.image,white,[0,0,self.width,self.height])
-
-            # Get rect frame
-            self.rect = self.image.get_rect()
-            # angle to face mouse
-            self.rect.x = 40
-            self.rect.y = 40
-            self.angle = 0
+        # Width and height of character
+        self.width = 40
+        self.height = 40
+        self.image = pygame.Surface([self.width,self.height])
+        self.image.fill(white)
+        self.image.set_colorkey(red)
+        
+        # Draw rectangle as character on screen
+        #pygame.draw.rect(self.image,white,[0,0,self.width,self.height])
+        
+        # Get rect frame
+        self.rect = self.image.get_rect()
+        # angle to face mouse
+        self.rect.x = 150
+        self.rect.y = 150
+        self.angle = 0
 
     def update(self):
-
-                    # WIP set pygame.rotate ??? 
-            pygame.transform.rotate(self.image, self.angle)
-            print (self.angle)
-
+        
+        self.rotate = pygame.transform.rotate(self.image, self.angle)
+        screen.blit(self.rotate, self.rect)
+        
+    
 pygame.init()
 
 # dimentions of screen
@@ -50,6 +50,7 @@ height = 300
 bg = (0,0,0)
 white = (255,255,255)
 red = (255,0,0)
+green = (0,255,0)
 
 # Screen
 screen = pygame.display.set_mode([width,height])
