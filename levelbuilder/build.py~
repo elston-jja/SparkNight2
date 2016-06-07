@@ -1,0 +1,14 @@
+'''
+Elston Almeida
+Levels
+ICS 3U1
+'''
+
+import pygame
+from pygame import *
+
+
+width = 1440
+height = 900
+
+
