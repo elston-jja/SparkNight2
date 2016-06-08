@@ -12,10 +12,10 @@ from map_list import maps
 
 class Level:
 
-    def __init__(self):
+    def __init__(self,level):
         # State the initial level number
         # Value not needed except for verbosity
-        self.level = 1
+        self.level = level
         # Default x y starting block cordinates
         x = 0
         y = 0
@@ -24,7 +24,7 @@ class Level:
         list_of_maps = maps()
         # Get the level from maps_list and load it into the interpreter
         # Change the current level to the list varible in the maps_list file
-        self.current_level = list_of_maps.map_1
+        self.current_level = list_of_maps.[level]
         # Get the lines/rows from each variable in the list
         for line_row in self.current_level:
             # Check each character in the row

@@ -10,7 +10,7 @@ class maps:
 
         # TEMPLATE
 
-        self.map_0 = [ 
+        self.0 = [ 
 
 "                                                ",
 "                                                ",
@@ -44,7 +44,7 @@ class maps:
 "                                                ",
             ]
 
-        self.map_1 = [ 
+        self.1 = [ 
 
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
 "w                                              w",
