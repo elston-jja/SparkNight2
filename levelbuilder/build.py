@@ -37,7 +37,7 @@ class Level:
                 # If the character is an 'e' then add an wall block
                 # That when collided can cause to exit
                 # As it is added to the exitdoor list (change var is need be)
-                if char == "=e":
+                if char == "e":
                     exit_ = Wall(x,y)
                     wall_list.add(exit_)
                     exit_doors_list.add(exit_)
