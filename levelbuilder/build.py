@@ -8,34 +8,54 @@ ICS 3U1
 
 import pygame
 from pygame import *
-from map1 import maps
+from map_list import maps
 
-class gamescene():
+class Level:
 
     def __init__(self):
-        level = 0
-        self.wall_list = pygame.sprite.Group()
+        # State the initial level number
+        # Value not needed except for verbosity
+        self.level = 1
+        # Default x y starting block cordinates
         x = 0
         y = 0
+        # Creates object called "list of maps" and I can call all maps
+        # From the lists in the maps_list file
         list_of_maps = maps()
-        level = list_of_maps.map_0
-        for row in level:
-            for col in row:
-                if col == "P":
-                    p = Wall(x,y)
-                    self.wall_list.add(p)
-                    all_sprites_list.add(p)
-                if col == "E":
-                    e = Wall(x,y)
-                    self.wall_list.add(e)
-                    all_sprites_list.add(e)
-                x+= 32
-            y+=32
+        # Get the level from maps_list and load it into the interpreter
+        # Change the current level to the list varible in the maps_list file
+        self.current_level = list_of_maps.map_1
+        # Get the lines/rows from each variable in the list
+        for line_row in self.current_level:
+            # Check each character in the row
+            for char in line_row:
+                # if the character is a 'w' then add a wall block (30,30)
+                if char == "w":
+                    wall = Wall(x,y)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                # If the character is an 'e' then add an wall block
+                # That when collided can cause to exit
+                # As it is added to the exitdoor list (change var is need be)
+                if char == "=e":
+                    exit_ = Wall(x,y)
+                    wall_list.add(exit_)
+                    exit_doors_list.add(exit_)
+                    all_sprites_list.add(exit_)
+                    # When drawing each block
+                    # (Character in row)
+                    # Move 30px to the right
+                x+= 30
+                # When moving down to next row change the Y by 30
+                # Reset the X
+            y+=30
             x = 0
                         
 class Wall(pygame.sprite.Sprite):
 
     def __init__(self,x,y):
+
+        # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
         
         self.image = pygame.Surface([30,30])
@@ -54,8 +74,6 @@ class Wall(pygame.sprite.Sprite):
 pygame.init()
 
 # dimentions of screen
-#width = 1440
-#height = 900
 
 width = 1440
 height = 900
@@ -73,8 +91,10 @@ pygame.display.set_caption("Level Example")
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
+exit_doors_list = pygame.sprite.Group()
+wall_list = pygame.sprite.Group()
 
-manager = gamescene()
+draw_current_level = Level()
 
 # Create object player
 #player = Player()
