@@ -95,8 +95,18 @@ class Player(pygame.sprite.Sprite):
         
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = moveFactor
+
+        
+    # Collisions
+    def check_collisions(self):
+        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+        if self.collision:
+            self.xvelocity = 0
+            self.yvelocity = 0        
                 
     def update(self):
+
+        self.check_collisions()
         
         # Gets mouse position
         self.get_pos()
@@ -148,6 +158,7 @@ draw_map = build.Level(1)
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
+wall_list = pygame.sprite.Group()
 
 # Create object player
 playerWidth = 40
@@ -157,6 +168,7 @@ player = Player(playerWidth,playerHeight)
 # Adds player to sprites list
 all_sprites_list.add(player)
 all_sprites_list.add(build.all_sprites_list)
+wall_list.add(build.wall_list)
 
 # Game time for clock functions
 clock = pygame.time.Clock()
@@ -181,26 +193,10 @@ while not done:
         playerWidthBorder = playerWidth/2+5
         playerHeightBorder = playerHeight/2 + 5
         
-        #Makes sure that the player should not be moving and that the movement does not push them outside the border
+        # Makes sure that the player should not be moving
+        # And that the movement does not push them outside the border
         player.moveUpdate()
-        """if player.moveTimer > 0 and playerWidthBorder < player.rect.center[0]+ player.xvelocity < width - playerWidthBorder and playerWidthBorder < player.rect.center[0]+player.remainderxvelocity/20 < width - playerWidthBorder and \
-        playerHeightBorder < player.rect.center[1]+player.yvelocity< height - playerHeightBorder and playerHeightBorder < player.rect.center[1]+ player.remainderyvelocity/20 < height - playerHeightBorder:
-            #Niffty feature that makes sure that player goes exactly to mouse position and is not a few off, activates every 2 steps
-            remainderMoveTimer = 2
-            if player.moveTimer%2 == 0:
-                player.rect.x += player.remainderxvelocity/(player.moveFactor/remainderMoveTimer)
-                player.rect.y += player.remainderyvelocity/(player.moveFactor/remainderMoveTimer)
-            player.rect.x += player.xvelocity
-            player.rect.y += player.yvelocity
-            player.moveTimer -= 1"""
-            
-        ########################
-        '''    
-        if player.rect.x - 20 == player.mouseMovePos[0]:
-            player.xvelocity = 0
-            player.yvelocity = 0
-            pass
-            '''
+
         # Call update function of sprites
         all_sprites_list.update()
 
@@ -209,8 +205,7 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-        #pygame.draw.line(screen, red, ((player.rect.center[0]),0), ((player.rect.center[0]),height), 1)
-        #pygame.draw.line(screen, red, (0,player.rect.center[1]), (width,player.rect.center[1]), 1)
+        
         # Set tick rate to 60
         clock.tick(60)
 
