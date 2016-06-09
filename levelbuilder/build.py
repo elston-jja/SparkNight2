@@ -24,7 +24,7 @@ class Level:
         list_of_maps = maps()
         # Get the level from maps_list and load it into the interpreter
         # Change the current level to the list varible in the maps_list file
-        self.current_level = list_of_maps.[level]
+        self.current_level = list_of_maps.map1
         # Get the lines/rows from each variable in the list
         for line_row in self.current_level:
             # Check each character in the row
@@ -71,12 +71,12 @@ class Wall(pygame.sprite.Sprite):
     
 
 
-pygame.init()
+# pygame.init()
 
-# dimentions of screen
+# # dimentions of screen
 
-width = 1440
-height = 900
+# width = 1440
+# height = 900
 
 # COLORS 
 bg = (0,0,0)
@@ -85,53 +85,53 @@ red = (220,100,100)
 green = (0,255,0)
 
 
-# Screen
-screen = pygame.display.set_mode([width,height])
-pygame.display.set_caption("Level Example")
+# # Screen
+# screen = pygame.display.set_mode([width,height])
+# pygame.display.set_caption("Level Example")
 
-# Create sprite group
+# # Create sprite group
 all_sprites_list = pygame.sprite.Group()
 exit_doors_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
 
-draw_current_level = Level()
+# draw_current_level = Level(1)
 
-# Create object player
-#player = Player()
+# # Create object player
+# #player = Player()
 
-# Adds player to sprites list
-#all_sprites_list.add(player)
+# # Adds player to sprites list
+# #all_sprites_list.add(player)
 
-# Game time for clock functions
-clock = pygame.time.Clock()
+# # Game time for clock functions
+# clock = pygame.time.Clock()
 
-# Fill background (Makes cicle, when loop screen.fill is commented)
-#screen.fill(bg)
+# # Fill background (Makes cicle, when loop screen.fill is commented)
+# #screen.fill(bg)
 
-# LOOP
-done = False
+# # LOOP
+# done = False
 
-while not done:
-            # Quit pygame
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
+# while not done:
+#             # Quit pygame
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 done = True
 
-        # Call update function of sprites
-        all_sprites_list.update()
+#         # Call update function of sprites
+#         all_sprites_list.update()
 
-        # fills background color
-        screen.fill(bg)
+#         # fills background color
+#         screen.fill(bg)
         
-        # Draw all sprites on screen
-        all_sprites_list.draw(screen)
+#         # Draw all sprites on screen
+#         all_sprites_list.draw(screen)
 
-        # Set tick rate to 60
-        clock.tick(60)
+#         # Set tick rate to 60
+#         clock.tick(60)
 
-        # Redraw screen
-        pygame.display.flip()
+#         # Redraw screen
+#         pygame.display.flip()
 
-# Quit if loop is exited
-pygame.quit()
+# # Quit if loop is exited
+# pygame.quit()
 

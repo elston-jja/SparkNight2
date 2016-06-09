@@ -4,6 +4,7 @@ Move Towards Mouse
 '''
 
 import pygame
+import build
 from math import *
 
 class Player(pygame.sprite.Sprite):
@@ -127,9 +128,11 @@ class Player(pygame.sprite.Sprite):
     
 pygame.init()
 
+
+
 # dimensions of screen
-width = 1300
-height = 800
+width = 1440
+height = 900
 
 # COLORS 
 bg = (0,0,0)
@@ -141,6 +144,8 @@ green = (0,255,0)
 screen = pygame.display.set_mode([width,height])
 pygame.display.set_caption("testing mouse and player")
 
+draw_map = build.Level(1)
+
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
 
@@ -151,6 +156,7 @@ player = Player(playerWidth,playerHeight)
 
 # Adds player to sprites list
 all_sprites_list.add(player)
+all_sprites_list.add(build.all_sprites_list)
 
 # Game time for clock functions
 clock = pygame.time.Clock()
@@ -203,8 +209,8 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-        pygame.draw.line(screen, red, ((player.rect.center[0]),0), ((player.rect.center[0]),height), 1)
-        pygame.draw.line(screen, red, (0,player.rect.center[1]), (width,player.rect.center[1]), 1)
+        #pygame.draw.line(screen, red, ((player.rect.center[0]),0), ((player.rect.center[0]),height), 1)
+        #pygame.draw.line(screen, red, (0,player.rect.center[1]), (width,player.rect.center[1]), 1)
         # Set tick rate to 60
         clock.tick(60)
 
