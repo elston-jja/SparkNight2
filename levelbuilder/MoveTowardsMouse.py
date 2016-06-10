@@ -139,6 +139,16 @@ class Player(pygame.sprite.Sprite):
             if self.movedy < 0:
                 self.yvelocity = ((self.yvelocity*-1)/2)/1000
                 self.rect.y += 1
+            if self.movedy > 0:
+                self.yvelocity = ((self.yvelocity*-1)/2)/1000
+                self.rect.y -= 1
+            if self.movedx > 0:
+                self.xvelocity = ((self.xvelocity*-1)/2)/1000
+                self.rect.x -= 1
+            if self.movedx < 0:
+                self.xvelocity = ((self.xvelocity*-1)/2)/1000
+                self.rect.x += 1
+
 
 
     def update(self):
