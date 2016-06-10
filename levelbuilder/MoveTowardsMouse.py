@@ -149,8 +149,6 @@ class Player(pygame.sprite.Sprite):
                 self.xvelocity = ((self.xvelocity*-1)/2)/1000
                 self.rect.x += 1
 
-
-
     def update(self):
 
         self.check_collisions()
@@ -185,6 +183,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.yvelocity
             self.moveTimer -= 1
 
+
 pygame.init()
 
 
@@ -203,7 +202,7 @@ green = (0,255,0)
 screen = pygame.display.set_mode([width,height])
 pygame.display.set_caption("testing mouse and player")
 
-draw_map = build.Level(1)
+draw_map = build.Level("map1")
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
@@ -234,7 +233,10 @@ while not done:
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.MOUSEBUTTONUP:
-                player.move()
+                button_pressed = pygame.mouse.get_pressed()
+                print button_pressed
+                if button_pressed:
+                    player.move()
 
         #Move player Position###
 
