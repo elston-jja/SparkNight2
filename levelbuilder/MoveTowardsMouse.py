@@ -236,7 +236,7 @@ while not done:
                 button_pressed = pygame.mouse.get_pressed()
                 print button_pressed
             elif event.type == pygame.MOUSEBUTTONUP:
-                if button_pressed[0]:
+                if button_pressed[2]:
                     player.move()
 
         #Move player Position###
