@@ -48,8 +48,11 @@ class Player(pygame.sprite.Sprite):
         self.movedx = 0
         self.xvelocity = 0
         self.yvelocity = 0
+        self.remainderxvelocity = 0
+        self.remainderyvelocity = 0
         self.moveTimer = 0
-
+        self.velocities = {"xvelocity":self.xvelocity,"yvelocity":self.yvelocity,"remainderxvelocity":self.remainderxvelocity,"remainderyvelocity":self.remainderyvelocity}
+        self.remainderMoveTimer = 2
     def get_pos(self):
         '''
         Gets the position and angle of the mouse, and adjusts the players angle that they are viewing
@@ -90,20 +93,50 @@ class Player(pygame.sprite.Sprite):
         self.yvelocity = self.movedy/moveFactor
         
         #Since pygame is not perfect, when dividing, there are remainders that are left, and these values store them so they can be added in between big velocity movements
-        self.remainderxvelocity = self.movedx%moveFactor
-        self.remainderyvelocity = self.movedy%moveFactor
-        
+        self.remainderxvelocity = (self.movedx%moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+        if self.movedx < 0:
+            self.remainderxvelocity *= -1
+        self.remainderyvelocity = (self.movedy%moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+        if self.movedy < 0:
+            self.remainderyvelocity *= -1
+        #updates all velocities in velocity dictionary
+        self.updateVelocities()
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = moveFactor
-
+        
+        #print self.velocities
+        
+    #Updates all velocities    
+    def updateVelocities(self,isDict = True):
+        '''
+        Updates all the velocity values in the entire object,
+        only really done because dictionary was created with all velocity values,
+        for the use of looping through values quickly
+        '''
+        #Updates the dictionary values so they are the same as the recently changed attribures
+        if isDict:
+            self.velocities['xvelocity'] =  self.xvelocity
+            self.velocities['yvelocity'] =  self.yvelocity
+            self.velocities['remainderxvelocity'] =  self.remainderxvelocity
+            self.velocities['remainderyvelocity'] =  self.remainderyvelocity
+        #Change attributes so they are like recently changed dictionary values
+        else:
+            self.xvelocity = self.velocities['xvelocity'] 
+            self.yvelocity = self.velocities['yvelocity']
+            self.remainderxvelocity = self.velocities['remainderxvelocity']
+            self.remainderyvelocity = self.velocities['remainderyvelocity']
+            
         
     # Collisions
     def check_collisions(self):
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
         if self.collision:
-            self.xvelocity = 0
-            self.yvelocity = 0        
-                
+            for values in self.velocities:
+                if abs(self.velocities[values]) > 0:
+                    self.velocities[values] = (-1*self.velocities[values])/self.velocities[values]
+            self.updateVelocities(False)
+            #print self.velocities
+                    
     def update(self):
 
         self.check_collisions()
@@ -125,13 +158,15 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = self.centerpoint
         
     def moveUpdate(self):
-        if self.moveTimer > 0 and playerWidthBorder < self.rect.center[0]+ self.xvelocity < width - playerWidthBorder and playerWidthBorder < self.rect.center[0]+self.remainderxvelocity/20 < width - playerWidthBorder and \
-        playerHeightBorder < self.rect.center[1]+self.yvelocity< height - playerHeightBorder and playerHeightBorder < self.rect.center[1]+ self.remainderyvelocity/20 < height - playerHeightBorder:
+        '''
+        Changes the x and y position of the player
+        '''
+        if self.moveTimer > 0: #and playerWidthBorder < self.rect.center[0]+ self.xvelocity < width - playerWidthBorder and playerWidthBorder < self.rect.center[0]+self.remainderxvelocity/20 < width - playerWidthBorder and \
+        #playerHeightBorder < self.rect.center[1]+self.yvelocity< height - playerHeightBorder and playerHeightBorder < self.rect.center[1]+ self.remainderyvelocity/20 < height - playerHeightBorder:
             #Niffty feature that makes sure that player goes exactly to mouse position and is not a few off, activates every 2 steps
-            remainderMoveTimer = 2
             if self.moveTimer%2 == 0:
-                self.rect.x += self.remainderxvelocity/(self.moveFactor/remainderMoveTimer)
-                self.rect.y += self.remainderyvelocity/(self.moveFactor/remainderMoveTimer)
+                self.rect.x += self.remainderxvelocity
+                self.rect.y += self.remainderyvelocity
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
             self.moveTimer -= 1
