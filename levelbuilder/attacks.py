@@ -14,26 +14,61 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 250
         self.rect.y = 250
         self.fireball = False
+        self.i = 0
         self.ultimate = False
-        
+
     def draw_animations(self):
         if self.fireball == True:
-            for i in xrange(1,80,1):
-                pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,i,orange)
-                pygame.time.wait(1)
-                pygame.display.flip()
+            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i-self.i/4),orange)
+            pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i+ 3),orange)
+            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/2 +2),orange)
+            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/3 +2),orange)
+            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/4 +2),orange)
+            self.i += 3
+            if self.i > 80:
+                self.i = 0
 
         if self.ultimate == True:
-            pygame.draw.aaline(screen, orange, self.rect)
-            
+            self.mouse_pos()
+            pygame.draw.line(screen, orange, [self.rect.centerx,self.rect.centery],[self.mouse[0],self.mouse[1]],5)
+            pygame.display.flip()
 
     def mouse_pos(self):
         self.mouse = pygame.mouse.get_pos()
-            
+
     def update(self):
-        self.draw_animation()
+        self.draw_animations()
+
+# class Attack(pygame.sprite.Sprite):
+#     def __init__(self,width,height,color,positionx,positiony):
+#         pygame.sprite.Sprite.__init__(self)
+#         self.width = width
+#         self.height = height
+#         self.color = color
+#         self.x = positionx
+#         self.y = positiony
+#         self.image = pygame.Surface([self.width,self.heigth])
+#         self.image.fill(self.color)
+#         self.rect = self.image.get_rect()
+
+class Attack(pygame.sprite.Sprite):
+    def __init__(self,image):
+        pygame.sprite.Sprite.__init__(self)
+        self.x = 50
+        self.y = 50
+        self.sprite = pygame.image.load("/home/ea/Dropbox/cpt/levelbuilder/"+image+".png").convert()
+        self.velocity = 5
+        self.update()
+
+    def update(self):
+        screen.blit(self.sprite,(self.x,self.y))
+
+# class Fireball(Attack):
+#     def __init__(self):
+#         Attack.__init__(self,20,20,blue):
 
 pygame.init()
+
 
 width = 600
 height = 600
@@ -43,11 +78,11 @@ orange = ( 255, 102, 0)
 screen = pygame.display.set_mode([width,height])
 
 pygame.display.set_caption("Testing Sprite Animation")
-
-player = Player()
+orb = Attack("orb")
+#player = Player()
 all_sprites_list = pygame.sprite.Group()
 
-all_sprites_list.add(player)
+#all_sprites_list.add(player)
 
 clock = pygame.time.Clock()
 isDone = False
@@ -56,23 +91,11 @@ while isDone == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             isDone = True
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_q:
-                player.fireball = True
-                print "Fireball"
-            if event.key == pygame.K_r:
-                player.ultimate = True
-                print "Fireball"
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_q:
-                player.fireball = False
-                print "Fireball ending"
-            if event.key == pygame.K_r:
-                player.ultimate = False
-                print "Ultimate ending"
+#
     screen.fill(bg)
-    all_sprites_list.draw(screen)
-    all_sprites_list.update()
+    #all_sprites_list.draw(screen)
+    #all_sprites_list.update()
+    orb.update()
     clock.tick(60)
     pygame.display.flip()
 
