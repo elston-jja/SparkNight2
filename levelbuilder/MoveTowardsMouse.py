@@ -83,40 +83,7 @@ class Player(pygame.sprite.Sprite):
         #print self.angle
 
     def move(self):
-        '''
-        '''
-        #Determines how the to move the object from current pos to mouse pos, does not actually move it, just sets the velocities
-        '''
-        #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
-        moveFactor = 40
-        player.moveFactor = moveFactor
 
-        #Gets position of mouse and finds difference in x and y cords of both points
-        self.mouseMovePos = pygame.mouse.get_pos()
-        self.movedx = self.mouseMovePos[0] - self.rect.center[0]
-        self.movedy = self.mouseMovePos[1] - self.rect.center[1]
-
-        #Divides difference of points by factor that determines how fast the character moves
-        self.xvelocity = self.movedx/moveFactor
-        self.yvelocity = self.movedy/moveFactor
-
-        #Since pygame is not perfect, when dividing, there are remainders that are left, and these values store them so they can be added in between big velocity movements
-        self.remainderxvelocity = (self.movedx%moveFactor)/(self.moveFactor/self.remainderMoveTimer)
-        if self.movedx < 0:
-            self.remainderxvelocity *= -1
-        self.remainderyvelocity = (self.movedy%moveFactor)/(self.moveFactor/self.remainderMoveTimer)
-        if self.movedy < 0:
-            self.remainderyvelocity *= -1
-        #updates all velocities in velocity dictionary
-        self.updateVelocities()
-        #this variable basically tells the main loop, how many times to update player pos before it reaches destination
-        self.moveTimer = moveFactor
-
-        #print self.velocities
-        '''
-        '''
-        Determines how the to move the object from current pos to mouse pos, does not actually move it, just sets the velocities
-        '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
 
@@ -164,24 +131,6 @@ class Player(pygame.sprite.Sprite):
 
     # Collisions
     def check_collisions(self):
-        '''
-        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-        velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
-        if self.collision:
-            for values in velocities:
-                velocity = 'velocity = self.%s' % values
-                currentTrace = 'currentTrace = self.trace%s' % values
-                traceAssign = 'self.trace%s = self.%s' % (values,values)
-                changeVelocity = ('self.%s = -1*self.%s/abs(self.%s)') % (values,values,values)
-                exec(currentTrace)
-                exec(velocity)
-                if abs(velocity) > 0 and currentTrace != velocity:
-                    exec(changeVelocity)
-                    exec(traceAssign)
-        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-        if self.exit_level:
-            change_map("map2")
-        '''
 
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
         #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
@@ -313,7 +262,7 @@ while not done:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button_pressed = pygame.mouse.get_pressed()
-                print button_pressed
+                #print button_pressed
             elif event.type == pygame.MOUSEBUTTONUP:
                 if button_pressed[2]:
                     player.move()
