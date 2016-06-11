@@ -39,17 +39,17 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.draw_animations()
 
-# class Attack(pygame.sprite.Sprite):
-#     def __init__(self,width,height,color,positionx,positiony):
-#         pygame.sprite.Sprite.__init__(self)
-#         self.width = width
-#         self.height = height
-#         self.color = color
-#         self.x = positionx
-#         self.y = positiony
-#         self.image = pygame.Surface([self.width,self.heigth])
-#         self.image.fill(self.color)
-#         self.rect = self.image.get_rect()
+class Attack(pygame.sprite.Sprite):
+        def __init__(self,width,height,color,positionx,positiony):
+            pygame.sprite.Sprite.__init__(self)
+            self.width = width
+            self.height = height
+            self.color= color
+            self.x = positionx
+            self.y = positiony
+            self.image = pygame.Surface([self.width,self.heigth])
+            self.image.fill(self.color)
+            self.rect = self.image.get_rect()
 
 class Attack(pygame.sprite.Sprite):
     def __init__(self,image):
@@ -57,11 +57,15 @@ class Attack(pygame.sprite.Sprite):
         self.x = 50
         self.y = 50
         self.sprite = pygame.image.load("/home/ea/Dropbox/cpt/levelbuilder/"+image+".png").convert()
-        self.velocity = 5
+
         self.update()
+
+    def mouse_pos(self):
+        self.mouse = pygame.mouse.get_pos()
 
     def update(self):
         screen.blit(self.sprite,(self.x,self.y))
+        self.x += self.velocity
 
 # class Fireball(Attack):
 #     def __init__(self):
@@ -79,10 +83,10 @@ screen = pygame.display.set_mode([width,height])
 
 pygame.display.set_caption("Testing Sprite Animation")
 orb = Attack("orb")
-#player = Player()
+player = Player()
 all_sprites_list = pygame.sprite.Group()
 
-#all_sprites_list.add(player)
+all_sprites_list.add(player)
 
 clock = pygame.time.Clock()
 isDone = False
@@ -93,8 +97,8 @@ while isDone == False:
             isDone = True
 #
     screen.fill(bg)
-    #all_sprites_list.draw(screen)
-    #all_sprites_list.update()
+    all_sprites_list.draw(screen)
+    all_sprites_list.update()
     orb.update()
     clock.tick(60)
     pygame.display.flip()
