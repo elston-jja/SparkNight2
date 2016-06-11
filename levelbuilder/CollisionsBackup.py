@@ -60,7 +60,7 @@ class Player(pygame.sprite.Sprite):
         self.moveFactor = 40
         #Collisions
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-        
+
     def get_pos(self):
         '''
         Gets the position and angle of the mouse, and adjusts the players angle that they are viewing
@@ -89,7 +89,7 @@ class Player(pygame.sprite.Sprite):
         '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-        
+
         #Gets position of mouse and finds difference in x and y cords of both points
         self.mouseMovePos = pygame.mouse.get_pos()
         self.movedx = self.mouseMovePos[0] - self.rect.center[0]
@@ -110,8 +110,8 @@ class Player(pygame.sprite.Sprite):
         self.updateVelocities()
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = self.moveFactor
-        
-        
+
+
             #print self.velocities
 
     #Updates all velocities
@@ -137,12 +137,12 @@ class Player(pygame.sprite.Sprite):
 
     # Collisions
     def check_collisions(self):
-        
+
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
-        
-        
+
+
         #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-        
+
         #if self.collision:
         #   print 'Collision'
         for values in velocities:
@@ -155,7 +155,7 @@ class Player(pygame.sprite.Sprite):
             if abs(velocity) > 0 and currentTrace != velocity:
                 exec(changeVelocity)
                 exec(traceAssign)
-                    
+
 
     def update(self):
 
@@ -181,15 +181,15 @@ class Player(pygame.sprite.Sprite):
         '''
         Changes the x and y position of the player
         '''
-        if self.moveTimer > 0: 
+        if self.moveTimer > 0:
             if self.moveTimer%2 == 0:
                 self.rect.x += self.remainderxvelocity
                 self.rect.y += self.remainderyvelocity
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
-            
+
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-            
+
             if self.collision:
                 if self.moveTimer%2 == 0:
                     self.rect.x -= self.remainderxvelocity
@@ -264,7 +264,7 @@ while not done:
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
         player.moveUpdate()
-        
+
         # Call update function of sprites
         all_sprites_list.update()
 
