@@ -130,7 +130,7 @@ class Player(pygame.sprite.Sprite):
 
 
     # Collisions
-    def check_collisions(self):
+    def changeVelocityAfterCollision(self):
 
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
         #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
@@ -148,9 +148,6 @@ class Player(pygame.sprite.Sprite):
                 exec(changeVelocity)
                 exec(traceAssign)
 
-        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-        if self.exit_level:
-            change_map("map0")
 
     def update(self):
 
@@ -184,14 +181,19 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.yvelocity
 
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+            self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
 
-            if self.collision:
+            if self.exit_level:
+                change_map("map0")
+
+            elif self.collision:
                 if self.moveTimer%2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
                 self.rect.x -= self.xvelocity
                 self.rect.y -= self.yvelocity
-                self.check_collisions()
+                self.changeVelocityAfterCollision()
+
             self.moveTimer -= 1
 
 def change_map(map_name):
@@ -266,10 +268,7 @@ while not done:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button_pressed = pygame.mouse.get_pressed()
-<<<<<<< HEAD
                 #print button_pressed
-=======
->>>>>>> 5e1347108943c64ee813a03d8e0a458c8a1b20e1
             elif event.type == pygame.MOUSEBUTTONUP:
                 if button_pressed[2]:
                     player.move()
