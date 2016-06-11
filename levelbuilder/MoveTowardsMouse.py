@@ -53,6 +53,11 @@ class Player(pygame.sprite.Sprite):
         self.moveTimer = 0
         self.velocities = {"xvelocity":self.xvelocity,"yvelocity":self.yvelocity,"remainderxvelocity":self.remainderxvelocity,"remainderyvelocity":self.remainderyvelocity}
         self.remainderMoveTimer = 2
+        self.tracexvelocity = 0
+        self.traceyvelocity = 0
+        self.traceremainderxvelocity = 0
+        self.traceremainderyvelocity = 0
+        
     def get_pos(self):
         '''
         Gets the position and angle of the mouse, and adjusts the players angle that they are viewing
@@ -130,24 +135,19 @@ class Player(pygame.sprite.Sprite):
     # Collisions
     def check_collisions(self):
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+        velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
         if self.collision:
-            #for values in self.velocities:
-            #    if abs(self.velocities[values]) > 0:
-            #        self.velocities[values] = (-1*self.velocities[values])/self.velocities[values]
-            #self.updateVelocities(False)
-            #print self.velocities
-            if self.movedy < 0:
-                self.yvelocity = ((self.yvelocity*-1)/2)/1000
-                self.rect.y += 1
-            if self.movedy > 0:
-                self.yvelocity = ((self.yvelocity*-1)/2)/1000
-                self.rect.y -= 1
-            if self.movedx > 0:
-                self.xvelocity = ((self.xvelocity*-1)/2)/1000
-                self.rect.x -= 1
-            if self.movedx < 0:
-                self.xvelocity = ((self.xvelocity*-1)/2)/1000
-                self.rect.x += 1
+            for values in velocities:
+                velocity = 'velocity = self.%s' % values
+                currentTrace = 'currentTrace = self.trace%s' % values
+                traceAssign = 'self.trace%s = self.%s' % (values,values)
+                changeVelocity = ('self.%s = -1*self.%s/abs(self.%s)') % (values,values,values)
+                exec(currentTrace)
+                exec(velocity)
+                if abs(velocity) > 0 and currentTrace != velocity:
+                    exec(changeVelocity)
+                    exec(traceAssign)
+                    
 
     def update(self):
 
@@ -242,8 +242,8 @@ while not done:
         #Move player Position###
 
         #Defines borders which player should not be able to pass
-        playerWidthBorder = playerWidth/2+5
-        playerHeightBorder = playerHeight/2 + 5
+        playerWidthBorder = playerWidth/2+5 + 30
+        playerHeightBorder = playerHeight/2 + 5 + 30
 
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
