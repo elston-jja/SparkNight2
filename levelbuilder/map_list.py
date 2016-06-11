@@ -10,7 +10,7 @@ class maps:
 
         # TEMPLATE
 
-        self.map0 = [ 
+        self.map0 = [
 
 "                                                ",
 "                                                ",
@@ -25,7 +25,7 @@ class maps:
 "                                                ",
 "                                                ",
 "                                                ",
-"                                                ", 
+"                                                ",
 "                                                ",
 "                                                ",
 "                                                ",
@@ -44,7 +44,7 @@ class maps:
 "                                                ",
             ]
 
-        self.map1 = [ 
+        self.map1 = [
 
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
 "w                                              w",
@@ -53,13 +53,13 @@ class maps:
 "w                                              w",
 "w                                              w",
 "w                                              w",
+"w                                             ee",
+"w                     wwww                    ee",
 "w                                              e",
-"w                     wwww                     e",
-"w                                              e",
 "w                                              w",
 "w                                              w",
 "w                                              w",
-"w                                              w", 
+"w                                              w",
 "w              wwwwwwwwwwwwwwwwww              w",
 "w                                              w",
 "w                                              w",
@@ -77,7 +77,7 @@ class maps:
 "w                                              w",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
             ]
-        self.map2 = [ 
+        self.map2 = [
 
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
 "wwwwwwww                                       w",
@@ -92,8 +92,8 @@ class maps:
 "w            ww                                w",
 "w            ww       wwwwwwwwwwwwwwwwwwwwwwwwww",
 "w            ww       wwwwwwwwwwwwwwwwwwwwwwwwww",
-"w            ww       ww                       e", 
-"w        wwwwwwwwwwwwwww                       e",
+"w            ww       ww                      ee",
+"w        wwwwwwwwwwwwwww                      ee",
 "w        wwwwwwwwwwwwwww                       e",
 "w        ww           ww                       w",
 "w        ww           ww                       w",
