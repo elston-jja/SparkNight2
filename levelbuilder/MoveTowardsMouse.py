@@ -148,6 +148,10 @@ class Player(pygame.sprite.Sprite):
                 exec(changeVelocity)
                 exec(traceAssign)
 
+        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+        if self.exit_level:
+            change_map("map0")
+
     def update(self):
 
         #self.check_collisions() #removed b/c not needed
