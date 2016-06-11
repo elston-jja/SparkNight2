@@ -1,7 +1,10 @@
-# Building branch
+#Attacks Branch
 
-TO DO:
-- Create proper collisions ✔
-- Create levels ✘
-- Level switching ✔
-- Be awesome ✔
+Create multiple attacks
+
+- Q Electricity ball
+- W Mag Field
+- E Polarity Flip
+- R Lightning Laser
+
+To be done by 23:00
