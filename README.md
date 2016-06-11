@@ -1,7 +1,10 @@
-# Cpt and other files
+#Attacks Branch
 
-Grade 11 CPT
+create multiple attacks
 
-GOAL:
+- Q Electricity ball
+- W Mag Field
+- E Polarity Flip
+- R Lightning Laser
 
-To create a python program using all knowledge learned throughout the course
+To be done by 23:00
