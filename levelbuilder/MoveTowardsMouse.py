@@ -57,7 +57,7 @@ class Player(pygame.sprite.Sprite):
         self.traceyvelocity = 0
         self.traceremainderxvelocity = 0
         self.traceremainderyvelocity = 0
-        
+
     def get_pos(self):
         '''
         Gets the position and angle of the mouse, and adjusts the players angle that they are viewing
@@ -82,7 +82,8 @@ class Player(pygame.sprite.Sprite):
 
     def move(self):
         '''
-        Determines how the to move the object from current pos to mouse pos, does not actually move it, just sets the velocities
+        '''
+        #Determines how the to move the object from current pos to mouse pos, does not actually move it, just sets the velocities
         '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
         moveFactor = 40
@@ -110,6 +111,33 @@ class Player(pygame.sprite.Sprite):
         self.moveTimer = moveFactor
 
         #print self.velocities
+        '''
+        '''
+        Determines how the to move the object from current pos to mouse pos, does not actually move it, just sets the velocities
+        '''
+        #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
+        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+
+        #Gets position of mouse and finds difference in x and y cords of both points
+        self.mouseMovePos = pygame.mouse.get_pos()
+        self.movedx = self.mouseMovePos[0] - self.rect.center[0]
+        self.movedy = self.mouseMovePos[1] - self.rect.center[1]
+
+        #Divides difference of points by factor that determines how fast the character moves
+        self.xvelocity = self.movedx/self.moveFactor
+        self.yvelocity = self.movedy/self.moveFactor
+
+        #Since pygame is not perfect, when dividing, there are remainders that are left, and these values store them so they can be added in between big velocity movements
+        self.remainderxvelocity = (self.movedx%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+        #if self.movedx < 0:
+        #    self.remainderxvelocity *= -1
+        self.remainderyvelocity = (self.movedy%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+        #if self.movedy < 0:
+        #    self.remainderyvelocity *= -1
+        #updates all velocities in velocity dictionary
+        self.updateVelocities()
+        #this variable basically tells the main loop, how many times to update player pos before it reaches destination
+        self.moveTimer = self.moveFactor
 
     #Updates all velocities
     def updateVelocities(self, isDict = True):
@@ -134,6 +162,7 @@ class Player(pygame.sprite.Sprite):
 
     # Collisions
     def check_collisions(self):
+        '''
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
         if self.collision:
@@ -150,10 +179,27 @@ class Player(pygame.sprite.Sprite):
         self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
         if self.exit_level:
             change_map("map2")
+        '''
+
+        velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
+        #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+
+        #if self.collision:
+        #   print 'Collision'
+        for values in velocities:
+            velocity = 'velocity = self.%s' % values
+            currentTrace = 'currentTrace = self.trace%s' % values
+            traceAssign = 'self.trace%s = self.%s' % (values,values)
+            changeVelocity = ('self.%s = -1*self.%s/abs(self.%s)') % (values,values,values)
+            exec(currentTrace)
+            exec(velocity)
+            if abs(velocity) > 0 and currentTrace != velocity:
+                exec(changeVelocity)
+                exec(traceAssign)
 
     def update(self):
 
-        self.check_collisions()
+        #self.check_collisions() #removed b/c not needed
 
         # Gets mouse position
         self.get_pos()
@@ -175,18 +221,26 @@ class Player(pygame.sprite.Sprite):
         '''
         Changes the x and y position of the player
         '''
-        if self.moveTimer > 0: #and playerWidthBorder < self.rect.center[0]+ self.xvelocity < width - playerWidthBorder and playerWidthBorder < self.rect.center[0]+self.remainderxvelocity/20 < width - playerWidthBorder and \
-        #playerHeightBorder < self.rect.center[1]+self.yvelocity< height - playerHeightBorder and playerHeightBorder < self.rect.center[1]+ self.remainderyvelocity/20 < height - playerHeightBorder:
-            #Niffty feature that makes sure that player goes exactly to mouse position and is not a few off, activates every 2 steps
+        if self.moveTimer > 0:
             if self.moveTimer%2 == 0:
                 self.rect.x += self.remainderxvelocity
                 self.rect.y += self.remainderyvelocity
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
+
+            self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+
+            if self.collision:
+                if self.moveTimer%2 == 0:
+                    self.rect.x -= self.remainderxvelocity
+                    self.rect.y -= self.remainderyvelocity
+                self.rect.x -= self.xvelocity
+                self.rect.y -= self.yvelocity
+                self.check_collisions()
             self.moveTimer -= 1
 
 def change_map(map_name):
-    
+
     all_sprites_list.empty()
     wall_list.empty()
     exit_list.empty()
@@ -198,13 +252,13 @@ def change_map(map_name):
     build.Level(map_name)
 
     all_sprites_list.add(player)
-    
+
     all_sprites_list.add(build.all_sprites_list)
     wall_list.add(build.wall_list)
     exit_list.add(build.exit_doors_list)
 
-    
-    
+
+
 pygame.init()
 
 
