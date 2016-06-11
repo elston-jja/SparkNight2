@@ -266,7 +266,10 @@ while not done:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button_pressed = pygame.mouse.get_pressed()
+<<<<<<< HEAD
                 #print button_pressed
+=======
+>>>>>>> 5e1347108943c64ee813a03d8e0a458c8a1b20e1
             elif event.type == pygame.MOUSEBUTTONUP:
                 if button_pressed[2]:
                     player.move()

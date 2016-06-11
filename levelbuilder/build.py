@@ -25,7 +25,7 @@ class Level:
         # Get the level from maps_list and load it into the interpreter
         # Change the current level to the list varible in the maps_list file
         exec_var = "self.current_level = list_of_maps." + str(self.level)
-        exec exec_var
+        exec (exec_var)
         # Get the lines/rows from each variable in the list
         for line_row in self.current_level:
             # Check each character in the row
@@ -67,25 +67,25 @@ class Level:
                 # Reset the X
             y+=30
             x = 0
-                        
+
 class Wall(pygame.sprite.Sprite):
 
     def __init__(self,x,y,color):
 
         # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
-        
+
         self.image = pygame.Surface([30,30])
         self.image.convert()
         self.rect = self.image.get_rect()
-        
+
         self.image.fill(color)
         self.rect.x = x
         self.rect.y = y
-        
+
     def update(self):
         pass
-    
+
 
 
 # pygame.init()
@@ -95,7 +95,7 @@ class Wall(pygame.sprite.Sprite):
 # width = 1440
 # height = 900
 
-# COLORS 
+# COLORS
 bg = (0,0,0)
 grey = (211,211,211)
 white = (255,255,255)
@@ -142,7 +142,7 @@ wall_list = pygame.sprite.Group()
 
 #         # fills background color
 #         screen.fill(bg)
-        
+
 #         # Draw all sprites on screen
 #         all_sprites_list.draw(screen)
 
@@ -154,4 +154,3 @@ wall_list = pygame.sprite.Group()
 
 # # Quit if loop is exited
 # pygame.quit()
-
