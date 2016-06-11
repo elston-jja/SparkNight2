@@ -14,50 +14,47 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self,PlayerWidth,PlayerHeight):
         pygame.sprite.Sprite.__init__(self)
-
         # Width and height of image
         self.width = PlayerWidth
         self.height = PlayerHeight
-
         # Creates images (CREATE TWO, one for reference later)
         self.imageMaster = pygame.Surface([self.width,self.height])
         self.image = self.imageMaster
-
         # Fills the image with white
         self.image.fill(white)
-
         # Makes transparent background
         # YOU NEED THIS FOR IT TO ROTATE
         self.image.set_colorkey(red)
-
         # Get rect frame of image
         self.rect = self.image.get_rect()
-
         # angle to face mouse
         self.rect.x = 150
         self.rect.y = 150
-
         # Just placeholder
         self.angle = 0
         self.vely = 2
         self.velx = 2
-
-        #Movement placeholder variables
+        #Movement placeholder positions
         self.mouseMovePos = 0
         self.movedy = 0
         self.movedx = 0
+        #movement placeholder velocities
         self.xvelocity = 0
         self.yvelocity = 0
         self.remainderxvelocity = 0
         self.remainderyvelocity = 0
+        #Timer placeholder for how many seconds movement takes
         self.moveTimer = 0
-        self.velocities = {"xvelocity":self.xvelocity,"yvelocity":self.yvelocity,"remainderxvelocity":self.remainderxvelocity,"remainderyvelocity":self.remainderyvelocity}
+        #Timer placeholder for how many seconds movement takes the finer movement
         self.remainderMoveTimer = 2
+        #Tracer values for all velocities
         self.tracexvelocity = 0
         self.traceyvelocity = 0
         self.traceremainderxvelocity = 0
         self.traceremainderyvelocity = 0
+        #Dont know what this guy does, but probabley sets what the moveTimr can do
         self.moveFactor = 40
+        #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
 
     def get_pos(self):
@@ -73,17 +70,21 @@ class Player(pygame.sprite.Sprite):
 
         # Get angle from mouse and player
         self.mouse_angle = atan2(-self.dy,self.dx)
+
         # Var for move function
         self.mouse_angle = degrees(self.mouse_angle)
         self.angle_move = self.mouse_angle
+
         # Sets angle value in class
         self.angle = self.mouse_angle
         if self.angle < 0:
             self.angle += 360
-        #print self.angle
+
 
     def move(self):
-
+        '''
+        Updates the velocities of the player after detecting a mouse click
+        '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
 
@@ -98,73 +99,49 @@ class Player(pygame.sprite.Sprite):
 
         #Since pygame is not perfect, when dividing, there are remainders that are left, and these values store them so they can be added in between big velocity movements
         self.remainderxvelocity = (self.movedx%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
-        #if self.movedx < 0:
-        #    self.remainderxvelocity *= -1
         self.remainderyvelocity = (self.movedy%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
-        #if self.movedy < 0:
-        #    self.remainderyvelocity *= -1
-        #updates all velocities in velocity dictionary
-        self.updateVelocities()
+
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = self.moveFactor
 
-    #Updates all velocities
-    def updateVelocities(self, isDict = True):
-        '''
-        Updates all the velocity values in the entire object,
-        only really done because dictionary was created with all velocity values,
-        for the use of looping through values quickly
-        '''
-        #Updates the dictionary values so they are the same as the recently changed attribures
-        if isDict:
-            self.velocities['xvelocity'] =  self.xvelocity
-            self.velocities['yvelocity'] =  self.yvelocity
-            self.velocities['remainderxvelocity'] =  self.remainderxvelocity
-            self.velocities['remainderyvelocity'] =  self.remainderyvelocity
-        #Change attributes so they are like recently changed dictionary values
-        else:
-            self.xvelocity = self.velocities['xvelocity']
-            self.yvelocity = self.velocities['yvelocity']
-            self.remainderxvelocity = self.velocities['remainderxvelocity']
-            self.remainderyvelocity = self.velocities['remainderyvelocity']
 
-
-    # Collisions
     def changeVelocityAfterCollision(self):
-
+        '''
+        Sets the velocities of players to ad absolute of 1 after a collision
+        '''
+        #All of the name velocities that we need to use in the next few commands for string insertion
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
-        #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
 
-        #if self.collision:
-        #   print 'Collision'
+        #Each loop changes a velocity after a collision only if the velocity is not the same as it was before
         for values in velocities:
+            #All these variables are strings that will be executed as commands
             velocity = 'velocity = self.%s' % values
             currentTrace = 'currentTrace = self.trace%s' % values
             traceAssign = 'self.trace%s = self.%s' % (values,values)
             changeVelocity = ('self.%s = -1*self.%s/abs(self.%s)') % (values,values,values)
+            #assigns variable currentTrace a trace velocity (previous velocity) value
             exec(currentTrace)
+            #Assigns velocity the current velocity value
             exec(velocity)
             if abs(velocity) > 0 and currentTrace != velocity:
+                #Changes the velocity to an absolute 1
                 exec(changeVelocity)
+                #sets the trace to current
                 exec(traceAssign)
 
 
     def update(self):
-
-        #self.check_collisions() #removed b/c not needed
-
+        '''
+        Updates all of the movement attributes of the player each loop of the main loop
+        '''
         # Gets mouse position
         self.get_pos()
-
         # Gets the old center point
         self.centerpoint = self.rect.center
-
         # Rotate sprite
         self.image = pygame.transform.rotate(self.imageMaster ,self.angle)
-
         # Get rectangle frame
         self.rect = self.image.get_rect()
-
         # Sets the new image to the old center point
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
@@ -173,6 +150,7 @@ class Player(pygame.sprite.Sprite):
         '''
         Changes the x and y position of the player
         '''
+        #Checks to 
         if self.moveTimer > 0:
             if self.moveTimer%2 == 0:
                 self.rect.x += self.remainderxvelocity
