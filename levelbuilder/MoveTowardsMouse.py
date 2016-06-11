@@ -57,6 +57,8 @@ class Player(pygame.sprite.Sprite):
         self.traceyvelocity = 0
         self.traceremainderxvelocity = 0
         self.traceremainderyvelocity = 0
+        self.moveFactor = 40
+        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
 
     def get_pos(self):
         '''
