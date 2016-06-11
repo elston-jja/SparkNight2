@@ -150,32 +150,37 @@ class Player(pygame.sprite.Sprite):
         '''
         Changes the x and y position of the player
         '''
-        #Checks to 
+        #Checks to see if the move timer is over
         if self.moveTimer > 0:
+            #lets the remainder update every 2 loops
             if self.moveTimer%2 == 0:
                 self.rect.x += self.remainderxvelocity
                 self.rect.y += self.remainderyvelocity
+            #Updates position eith velocity
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
-
+            #Checks to see if a collision occured after the move
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
             self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-
+            #If collision was at exit block, loads new map
             if self.exit_level:
                 change_map("map0")
-
+            #if not exit block, but normal wall cancel last movement
             elif self.collision:
                 if self.moveTimer%2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
                 self.rect.x -= self.xvelocity
                 self.rect.y -= self.yvelocity
+                #and set velocity to opposite direction equal to 1
                 self.changeVelocityAfterCollision()
 
             self.moveTimer -= 1
 
 def change_map(map_name):
-
+    '''
+    Builds new map when exit encountred, and creates new walls
+    '''
     all_sprites_list.empty()
     wall_list.empty()
     exit_list.empty()
