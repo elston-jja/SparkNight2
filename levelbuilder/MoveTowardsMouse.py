@@ -147,7 +147,9 @@ class Player(pygame.sprite.Sprite):
                 if abs(velocity) > 0 and currentTrace != velocity:
                     exec(changeVelocity)
                     exec(traceAssign)
-                    
+        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+        if self.exit_level:
+            change_map("map2")
 
     def update(self):
 
@@ -183,7 +185,26 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.yvelocity
             self.moveTimer -= 1
 
+def change_map(map_name):
+    
+    all_sprites_list.empty()
+    wall_list.empty()
+    exit_list.empty()
 
+    build.all_sprites_list.empty()
+    build.exit_doors_list.empty()
+    build.wall_list.empty()
+
+    build.Level(map_name)
+
+    all_sprites_list.add(player)
+    
+    all_sprites_list.add(build.all_sprites_list)
+    wall_list.add(build.wall_list)
+    exit_list.add(build.exit_doors_list)
+
+    
+    
 pygame.init()
 
 
@@ -202,11 +223,12 @@ green = (0,255,0)
 screen = pygame.display.set_mode([width,height])
 pygame.display.set_caption("testing mouse and player")
 
-draw_map = build.Level("map1")
+draw_map = build.Level("map2")
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
+exit_list = pygame.sprite.Group()
 
 # Create object player
 playerWidth = 40
@@ -217,6 +239,7 @@ player = Player(playerWidth,playerHeight)
 all_sprites_list.add(player)
 all_sprites_list.add(build.all_sprites_list)
 wall_list.add(build.wall_list)
+exit_list.add(build.exit_doors_list)
 
 # Game time for clock functions
 clock = pygame.time.Clock()

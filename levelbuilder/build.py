@@ -24,24 +24,41 @@ class Level:
         list_of_maps = maps()
         # Get the level from maps_list and load it into the interpreter
         # Change the current level to the list varible in the maps_list file
-        self.current_level = list_of_maps.map1
+        exec_var = "self.current_level = list_of_maps." + str(self.level)
+        exec exec_var
         # Get the lines/rows from each variable in the list
         for line_row in self.current_level:
             # Check each character in the row
             for char in line_row:
                 # if the character is a 'w' then add a wall block (30,30)
                 if char == "w":
-                    wall = Wall(x,y)
+                    wall = Wall(x,y,grey)
                     wall_list.add(wall)
                     all_sprites_list.add(wall)
                 # If the character is an 'e' then add an wall block
                 # That when collided can cause to exit
                 # As it is added to the exitdoor list (change var is need be)
                 if char == "e":
-                    exit_ = Wall(x,y)
+                    exit_ = Wall(x,y,red)
                     wall_list.add(exit_)
                     exit_doors_list.add(exit_)
                     all_sprites_list.add(exit_)
+                if char == "y":
+                    wall = Wall(x,y,yellow)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                if char == "g":
+                    wall = Wall(x,y,green)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                if char == "p":
+                    wall = Wall(x,y,purple)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                if char == "y":
+                    wall = Wall(x,y,yellow)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
                     # When drawing each block
                     # (Character in row)
                     # Move 30px to the right
@@ -53,7 +70,7 @@ class Level:
                         
 class Wall(pygame.sprite.Sprite):
 
-    def __init__(self,x,y):
+    def __init__(self,x,y,color):
 
         # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
@@ -62,7 +79,7 @@ class Wall(pygame.sprite.Sprite):
         self.image.convert()
         self.rect = self.image.get_rect()
         
-        self.image.fill(red)
+        self.image.fill(color)
         self.rect.x = x
         self.rect.y = y
         
@@ -80,10 +97,13 @@ class Wall(pygame.sprite.Sprite):
 
 # COLORS 
 bg = (0,0,0)
+grey = (211,211,211)
 white = (255,255,255)
 red = (220,100,100)
 green = (0,255,0)
-
+blue = (0,0,255)
+yellow = (255,255,0)
+purple = (128,0,128)
 
 # # Screen
 # screen = pygame.display.set_mode([width,height])
