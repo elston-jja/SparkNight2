@@ -164,24 +164,6 @@ class Player(pygame.sprite.Sprite):
 
     # Collisions
     def check_collisions(self):
-        '''
-        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-        velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
-        if self.collision:
-            for values in velocities:
-                velocity = 'velocity = self.%s' % values
-                currentTrace = 'currentTrace = self.trace%s' % values
-                traceAssign = 'self.trace%s = self.%s' % (values,values)
-                changeVelocity = ('self.%s = -1*self.%s/abs(self.%s)') % (values,values,values)
-                exec(currentTrace)
-                exec(velocity)
-                if abs(velocity) > 0 and currentTrace != velocity:
-                    exec(changeVelocity)
-                    exec(traceAssign)
-        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-        if self.exit_level:
-            change_map("map2")
-        '''
 
         velocities = ['xvelocity','yvelocity','remainderxvelocity','remainderyvelocity']
         #self.collision = pygame.sprite.spritecollide(self,wall_list,False)
@@ -198,6 +180,10 @@ class Player(pygame.sprite.Sprite):
             if abs(velocity) > 0 and currentTrace != velocity:
                 exec(changeVelocity)
                 exec(traceAssign)
+
+        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+        if self.exit_level:
+            change_map("map0")
 
     def update(self):
 
