@@ -1,6 +1,6 @@
 #Attacks Branch
 
-create multiple attacks
+Create multiple attacks
 
 - Q Electricity ball
 - W Mag Field
