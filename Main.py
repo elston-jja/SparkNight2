@@ -5,7 +5,6 @@ Move Towards Mouse
 
 import pygame
 import build
-import attack
 from math import *
 
 class Player(pygame.sprite.Sprite):
@@ -57,11 +56,6 @@ class Player(pygame.sprite.Sprite):
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
-
-        #Attacks
-        self.fireball = False
-        self.i = 0
-        self.ultimate = False
 
     def get_pos(self):
         '''
@@ -183,22 +177,6 @@ class Player(pygame.sprite.Sprite):
 
             self.moveTimer -= 1
 
-    def draw_animations(self):
-        if self.fireball == True:
-            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i-self.i/4),orange)
-            pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i+ 3),orange)
-            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/2 +2),orange)
-            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/3 +2),orange)
-            #pygame.gfxdraw.aacircle(screen,self.rect.centerx,self.rect.centery,(self.i/4 +2),orange)
-            self.i += 3
-            if self.i > 80:
-                self.i = 0
-
-        if self.ultimate == True:
-            self.mouse_pos()
-            pygame.draw.line(screen, orange, [self.rect.centerx,self.rect.centery],[self.mouse[0],self.mouse[1]],5)
-            pygame.display.flip()
-
 def change_map(map_name):
     '''
     Builds new map when exit encountred, and creates new walls
@@ -277,6 +255,10 @@ while not done:
             elif event.type == pygame.MOUSEBUTTONUP:
                 if button_pressed[2]:
                     player.move()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    print ("It works")
+
 
         #Move player Position###
 
