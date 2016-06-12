@@ -194,7 +194,7 @@ class Player(pygame.sprite.Sprite):
     def attack_R(self):
         laser = Laser()
         attack_sprites_list.add(laser)
-        #all_sprites_list.add(laser)
+        all_sprites_list.add(laser)
 
 class ElectricityOrb(Player):
 
@@ -281,7 +281,13 @@ class ElectricityOrb(Player):
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([40,40])
+        self.rect = self.image.get_rect()
         # Get mouse position again
+        self.image.fill(red)
+        self.image.set_colorkey(red)
+        self.rect.x = player.rect.x +20
+        self.rect.y = player.rect.y +20
 
     def update(self):
         self.mousex = pygame.mouse.get_pos()[0]
@@ -289,9 +295,7 @@ class Laser(pygame.sprite.Sprite):
         self.draw()
 
     def draw(self):
-        pygame.draw.line(screen,red,[self.mouse.x,self.rect.y],[player.rect.x,player.rect.y])
-
-
+        pygame.draw.line(screen,white,[self.mousex,self.mousey],[player.rect.x,player.rect.y],5)
 
 
 def change_map(map_name):
