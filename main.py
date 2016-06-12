@@ -250,9 +250,10 @@ class ElectricityOrb(Player):
         self.orb_image = pygame.image.load("orb.png").convert()
         self.orb_image.set_colorkey(bg)
         self.obstacle = wall_list
+        self.move()
 
     def get_pos(self):
-        self.move()
+        pass
 
     def move(self):
         '''
