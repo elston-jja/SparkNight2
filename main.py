@@ -5,7 +5,7 @@ Move Towards Mouse
 
 import pygame
 from pygame import examples
-from pygame.examples import chimp
+from pygame.examples import aliens
 import build
 from math import *
 
@@ -232,12 +232,51 @@ class ElectricityOrb(Player):
         self.remainderyvelocity = 0
         #Timer placeholder for how many seconds movement takes
         self.moveTimer = 0
+
+        #Timer placeholder for how many seconds movement takes the finer movement
+        self.remainderMoveTimer = 2
+        #Tracer values for all velocities
+        self.tracexvelocity = 0
+        self.traceyvelocity = 0
+        self.traceremainderxvelocity = 0
+        self.traceremainderyvelocity = 0
+        #Dont know what this guy does, but probabley sets what the moveTimr can do
+        self.moveFactor = 40
+        #Boolean value that determines if a wall was hit
+        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
         self.orb_image = pygame.image.load("orb.png").convert()
         self.orb_image.set_colorkey(bg)
+        self.obstacle = obstacles_for_attacks
+
+    def move(self):
+        '''
+        Updates the velocities of the player after detecting a mouse click
+        '''
+        #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
+        self.collision = pygame.sprite.spritecollide(self,self.obstacle,True)
+
+        #Gets position of mouse and finds difference in x and y cords of both points
+        self.mouseMovePos = pygame.mouse.get_pos()
+        self.movedx = self.mouseMovePos[0] - self.rect.center[0]
+        self.movedy = self.mouseMovePos[1] - self.rect.center[1]
+
+        #Divides difference of points by factor that determines how fast the character moves
+        self.xvelocity = self.movedx/self.moveFactor
+        self.yvelocity = self.movedy/self.moveFactor
+
+        #Since pygame is not perfect, when dividing, there are remainders that are left, and these values store them so they can be added in between big velocity movements
+        self.remainderxvelocity = (self.movedx%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+        self.remainderyvelocity = (self.movedy%self.moveFactor)/(self.moveFactor/self.remainderMoveTimer)
+
+        #this variable basically tells the main loop, how many times to update player pos before it reaches destination
+        self.moveTimer = self.moveFactor
+
+    def get_pos(self):
+        pass
 
     def draw(self):
-        screen.blit(self.orb_image,self.rect.center)
-        print 'It worked?'
+        screen.blit(self.orb_image,(self.rect.x,self.rect.y))
+        #print 'It worked?'
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
@@ -250,7 +289,7 @@ class Laser(pygame.sprite.Sprite):
         self.width = 5
         pygame.draw.line(screen,red,(self.initialx,self.initialy),(self.mouselocation[0],\
         self.mouselocation[1]),self.width)
-        test = pygame.examples.chimp.main()
+        #test = pygame.examples.aliens.main()
 
 
 def change_map(map_name):
@@ -300,6 +339,8 @@ all_sprites_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
+#enemy_list = pygame.sprite.Group()
+obstacles_for_attacks = wall_list#.add(enemy_list)
 
 # Create object player
 playerWidth = 40
@@ -335,6 +376,8 @@ while not done:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
+                    for value in attack_sprites_list:
+                        value.move()
                 if event.key == pygame.K_r:
                     player.attack_R()
 
