@@ -281,16 +281,12 @@ class ElectricityOrb(Player):
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.masterimage = pygame.Surface([40,40])
-        self.image = self.masterimage
-        self.rect = self.image.get_rect()
-        self.image.set_colorkey(red)
         pass
+        #pass
         # Get mouse position again
 
         #self.image.set_colorkey(red)
-
-    def update(self):
+    def get_pos(self):
         self.mousex = pygame.mouse.get_pos()[0]
         self.mousey = pygame.mouse.get_pos()[1]
         self.currentx = player.rect.x
@@ -299,14 +295,28 @@ class Laser(pygame.sprite.Sprite):
         self.dy = self.mousey - self.currenty
         self.mouse_angle = atan2(-self.dy,self.dx)
         self.mouse_angle = degrees(self.mouse_angle)
-        self.imagemaster = pygame.Surface([self.dx,5])
-        self.image.set_colorkey(white)
-        self.image = pygame.transform.rotate(self.imagemaster, self.mouse_angle)
+
+    def get_master(self):
+        self.masterimage = pygame.Surface([self.dx,15])
+        self.image = self.masterimage
         self.rect = self.image.get_rect()
+        self.image.set_colorkey(white)
+        self.image.fill(red)
+        self.centerpoint = self.rect.center
+
+    def set_pos(self):
         self.rect.x = player.rect.x
         self.rect.y = player.rect.y
+        self.image.set_colorkey(white)
         self.image.fill(red)
 
+    def update(self):
+        self.get_pos()
+        self.get_master()
+        self.image = pygame.transform.rotate(self.masterimage, self.mouse_angle)
+        self.rect = self.image.get_rect()
+        self.rect.center = self.centerpoint
+        self.set_pos()
 
 def change_map(map_name):
     '''
