@@ -255,6 +255,26 @@ class ElectricityOrb(Player):
     def get_pos(self):
         pass
 
+    def moveUpdate(self):
+        '''
+        Keeps the electrriy ball moving to where the player clicked it to until collision
+        '''
+        #Checks to see if the move timer is over
+        if self.moveTimer > 0:
+            #lets the remainder update every 2 loops
+            if self.moveTimer%2 == 0:
+                self.rect.x += self.remainderxvelocity
+                self.rect.y += self.remainderyvelocity
+            #Updates position eith velocity
+            self.rect.x += self.xvelocity
+            self.rect.y += self.yvelocity
+            #Checks to see if a collision occured after the move
+            self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+            self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+            #If collision was at exit block, loads new map
+            if self.exit_level or self.collision:
+                all_sprites_list.remove(self)
+
     def move(self):
         '''
         Updates the velocities of the player after detecting a mouse click
