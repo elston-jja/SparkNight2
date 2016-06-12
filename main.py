@@ -282,14 +282,16 @@ class Laser(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # Get mouse position again
-        self.mouselocation = pygame.mouse.get_pos()
-        # Get X and Y cords of player
-        self.initialx = player.rect.x
-        self.initialy = player.rect.y
-        self.width = 5
-        pygame.draw.line(screen,red,(self.initialx,self.initialy),(self.mouselocation[0],\
-        self.mouselocation[1]),self.width)
-        #test = pygame.examples.aliens.main()
+
+    def update(self):
+        self.mousex = pygame.mouse.get_pos()[0]
+        self.mousey = pygame.mouse.get_pos()[1]
+        self.draw()
+
+    def draw(self):
+        pygame.draw.line(screen,red,[self.mouse.x,self.rect.y],[player.rect.x,player.rect.y])
+
+
 
 
 def change_map(map_name):
@@ -341,7 +343,7 @@ wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
 #enemy_list = pygame.sprite.Group()
-obstacles_for_attacks = wall_list#.add(enemy_list)
+
 
 # Create object player
 playerWidth = 40
@@ -353,6 +355,7 @@ all_sprites_list.add(player)
 all_sprites_list.add(build.all_sprites_list)
 wall_list.add(build.wall_list)
 exit_list.add(build.exit_doors_list)
+obstacles_for_attacks = wall_list
 
 # Game time for clock functions
 clock = pygame.time.Clock()
