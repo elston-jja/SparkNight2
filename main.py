@@ -299,16 +299,24 @@ class Laser(pygame.sprite.Sprite):
         self.mouse_angle = degrees(self.mouse_angle)
 
     def get_master(self):
-        self.masterimage = pygame.Surface([abs(self.dx),abs(self.dy)])
+        self.masterimage = pygame.Surface([self.dx,40])
         self.image = self.masterimage
         self.rect = self.image.get_rect()
         self.image.set_colorkey(white)
         self.image.fill(red)
-        self.centerpoint = self.rect.center
+        self.top = self.rect.top
 
     def set_pos(self):
         self.rect.x = player.rect.centerx
         self.rect.y = player.rect.centery
+
+    def debug(self):
+        print " Current dx and dy values \n"
+        print "\t" + str(self.dx)
+        print "\t" + str(self.dy)
+        print "\nCurrent X and Y values for image"
+        print "\t" + str(self.rect.x)
+        print "\t" + str(self.rect.y)
         #self.image.set_colorkey(white)
         #self.image.fill(red)
 
@@ -317,8 +325,9 @@ class Laser(pygame.sprite.Sprite):
         self.get_master()
         self.image = pygame.transform.rotate(self.masterimage, self.mouse_angle)
         self.rect = self.image.get_rect()
-        #self.rect.center = self.centerpoint
+        self.rect.top = self.top
         self.set_pos()
+        self.debug()
 
 def change_map(map_name):
     '''
