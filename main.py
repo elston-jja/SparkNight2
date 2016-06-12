@@ -281,21 +281,31 @@ class ElectricityOrb(Player):
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([40,40])
+        self.masterimage = pygame.Surface([40,40])
+        self.image = self.masterimage
         self.rect = self.image.get_rect()
-        # Get mouse position again
-        self.image.fill(red)
         self.image.set_colorkey(red)
-        self.rect.x = player.rect.x +20
-        self.rect.y = player.rect.y +20
+        pass
+        # Get mouse position again
+
+        #self.image.set_colorkey(red)
 
     def update(self):
         self.mousex = pygame.mouse.get_pos()[0]
         self.mousey = pygame.mouse.get_pos()[1]
-        self.draw()
-
-    def draw(self):
-        pygame.draw.line(screen,white,[self.mousex,self.mousey],[player.rect.x,player.rect.y],5)
+        self.currentx = player.rect.x
+        self.currenty = player.rect.y
+        self.dx = self.mousex - self.currentx
+        self.dy = self.mousey - self.currenty
+        self.mouse_angle = atan2(-self.dy,self.dx)
+        self.mouse_angle = degrees(self.mouse_angle)
+        self.imagemaster = pygame.Surface([self.dx,5])
+        self.image.set_colorkey(white)
+        self.image = pygame.transform.rotate(self.imagemaster, self.mouse_angle)
+        self.rect = self.image.get_rect()
+        self.rect.x = player.rect.x
+        self.rect.y = player.rect.y
+        self.image.fill(red)
 
 
 def change_map(map_name):
