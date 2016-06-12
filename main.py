@@ -4,6 +4,8 @@ Move Towards Mouse
 '''
 
 import pygame
+from pygame import examples
+from pygame.examples import aliens
 import build
 from math import *
 
@@ -188,6 +190,10 @@ class Player(pygame.sprite.Sprite):
         attack_sprites_list.add(orb)
         all_sprites_list.add(orb)
 
+    def attack_R(self):
+        laser = Laser()
+        attack_sprites_list.add(laser)
+        #all_sprites_list.add(laser)
 
 class ElectricityOrb(Player):
 
@@ -231,6 +237,19 @@ class ElectricityOrb(Player):
     def draw(self):
         screen.blit(self.orb_image,self.rect.center)
         print 'It worked?'
+
+class Laser(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        # Get mouse position again
+        self.mouselocation = pygame.mouse.get_pos()
+        # Get X and Y cords of player
+        self.initialx = player.rect.x
+        self.initialy = player.rect.y
+        self.width = 5
+        pygame.draw.line(screen,red,(self.initialx,self.initialy),(self.mouselocation[0],\
+        self.mouselocation[1]),self.width)
+        test = pygame.examples.aliens.main()
 
 
 def change_map(map_name):
@@ -315,6 +334,8 @@ while not done:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
+                if event.key == pygame.K_r:
+                    player.attack_R()
 
 
         #Move player Position###
