@@ -282,51 +282,75 @@ class ElectricityOrb(Player):
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
+
         pygame.sprite.Sprite.__init__(self)
         pass
-        #pass
-        # Get mouse position again
+        
+        
 
-        #self.image.set_colorkey(red)
     def get_pos(self):
+
         self.mousex = pygame.mouse.get_pos()[0]
         self.mousey = pygame.mouse.get_pos()[1]
+        
         self.currentx = player.rect.centerx
         self.currenty = player.rect.centery
-        self.dx = self.mousex - self.currentx
-        self.dy = self.mousey - self.currenty
-        self.mouse_angle = atan2(-self.dy,self.dx)
-        self.mouse_angle = degrees(self.mouse_angle)
+
+        self.dx = (self.mousex - self.currentx)
+        self.dy = (self.mousey - self.currenty)
+        #self.dx = self.currentx - self.mousex
+        #self.dy = self.currenty - self.mousey
+
+        self.mouse_angle = degrees(atan2(-(self.dy),self.dx))
+        if self.mouse_angle < 0:
+            self.mouse_angle += 360
+            
+        self.c = self.dy**2 + self.dx**2
+        self.c = self.c**(1/2.0)
 
     def get_master(self):
-        self.masterimage = pygame.Surface([self.dx,40])
+
+        self.masterimage = pygame.Surface([self.c,5])
+
         self.image = self.masterimage
+
         self.rect = self.image.get_rect()
+
         self.image.set_colorkey(white)
         self.image.fill(red)
-        self.top = self.rect.top
 
     def set_pos(self):
+
         self.rect.x = player.rect.centerx
         self.rect.y = player.rect.centery
 
     def debug(self):
+
+        print "\n Mouse angle\n\t"+ str(self.mouse_angle)+ "\n"
+
         print " Current dx and dy values \n"
         print "\t" + str(self.dx)
         print "\t" + str(self.dy)
-        print "\nCurrent X and Y values for image"
+
+        print "\n Current X and Y values for image"
         print "\t" + str(self.rect.x)
         print "\t" + str(self.rect.y)
-        #self.image.set_colorkey(white)
-        #self.image.fill(red)
+
+        print "\n Bottom Pos\n\n\t" + str(self.rect.bottom)
+
+        print "\n Top Pos\n\n\t" + str(self.rect.top)
 
     def update(self):
+
         self.get_pos()
-        self.get_master()
+
+        self.get_master() 
+
         self.image = pygame.transform.rotate(self.masterimage, self.mouse_angle)
         self.rect = self.image.get_rect()
-        self.rect.top = self.top
-        self.set_pos()
+
+        self.set_pos()  
+
         self.debug()
 
 def change_map(map_name):
@@ -417,6 +441,8 @@ while not done:
                     player.attack_Q()
                 if event.key == pygame.K_r:
                     player.attack_R()
+                if event.key == pygame.K_c:
+                    done = True
 
 
         #Move player Position###
