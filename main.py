@@ -134,6 +134,8 @@ class Player(pygame.sprite.Sprite):
         '''
         Updates all of the movement attributes of the player each loop of the main loop
         '''
+        #Movement Update
+        self.moveUpdate()
         # Gets mouse position
         self.get_pos()
         # Gets the old center point
@@ -176,6 +178,52 @@ class Player(pygame.sprite.Sprite):
                 self.changeVelocityAfterCollision()
 
             self.moveTimer -= 1
+
+        def attack_Q(self):
+            '''
+            Creates the Q electricity ball attack, and projects it to wherever the mouse was
+            '''
+            orb = ElectricityOrb()
+            attack_sprites_list.add(orb)
+
+
+class ElectricityOrb(Player):
+
+    def __init__(self):
+
+        pygame.sprite.Sprite.__init__(self)
+        # Width and height of image
+        self.width = 10
+        self.height = 10
+        # Creates images (CREATE TWO, one for reference later)
+        self.imageMaster = pygame.Surface([self.width,self.height])
+        self.image = self.imageMaster
+        # Fills the image with white
+        self.image.fill(white)
+        # Makes transparent background
+        # YOU NEED THIS FOR IT TO ROTATE
+        self.image.set_colorkey(red)
+        # Get rect frame of image
+        self.rect = self.image.get_rect()
+        # angle to face mouse
+        self.rect.x = 150
+        self.rect.y = 150
+        # Just placeholder
+        self.angle = 0
+        self.vely = 2
+        self.velx = 2
+        #Movement placeholder positions
+        self.mouseMovePos = 0
+        self.movedy = 0
+        self.movedx = 0
+        #movement placeholder velocities
+        self.xvelocity = 0
+        self.yvelocity = 0
+        self.remainderxvelocity = 0
+        self.remainderyvelocity = 0
+        #Timer placeholder for how many seconds movement takes
+        self.moveTimer = 0
+
 
 def change_map(map_name):
     '''
@@ -223,6 +271,7 @@ draw_map = build.Level("map2")
 all_sprites_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
+attack_sprites_list = pygame.sprite.Group()
 
 # Create object player
 playerWidth = 40
@@ -257,7 +306,7 @@ while not done:
                     player.move()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
-                    print ("It works")
+                    player.attack_Q()
 
 
         #Move player Position###
@@ -268,7 +317,6 @@ while not done:
 
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
-        player.moveUpdate()
 
         # Call update function of sprites
         all_sprites_list.update()
