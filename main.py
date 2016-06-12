@@ -5,7 +5,7 @@ Move Towards Mouse
 
 import pygame
 from pygame import examples
-from pygame.examples import aliens
+from pygame.examples import chimp
 import build
 from math import *
 
@@ -249,7 +249,7 @@ class Laser(pygame.sprite.Sprite):
         self.width = 5
         pygame.draw.line(screen,red,(self.initialx,self.initialy),(self.mouselocation[0],\
         self.mouselocation[1]),self.width)
-        test = pygame.examples.aliens.main()
+        test = pygame.examples.chimp.main()
 
 
 def change_map(map_name):
