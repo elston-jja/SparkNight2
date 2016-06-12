@@ -187,6 +187,7 @@ class Player(pygame.sprite.Sprite):
         orb = ElectricityOrb()
         attack_sprites_list.add(orb)
         all_sprites_list.add(orb)
+        #print 'it worked in the function?'
 
 
 class ElectricityOrb(Player):
@@ -201,10 +202,10 @@ class ElectricityOrb(Player):
         self.imageMaster = pygame.Surface([self.width,self.height])
         self.image = self.imageMaster
         # Fills the image with white
-        self.image.fill(white)
+        #self.image.fill(white)
         # Makes transparent background
         # YOU NEED THIS FOR IT TO ROTATE
-        self.image.set_colorkey(red)
+        #self.image.set_colorkey(red)
         # Get rect frame of image
         self.rect = self.image.get_rect()
         # angle to face mouse
@@ -334,7 +335,11 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-
+        try:
+            for values in attack_sprites_list:
+                values.draw()
+        except:
+            pass
         # Set tick rate to 60
         clock.tick(60)
 
