@@ -210,8 +210,10 @@ class ElectricityOrb(Player):
         self.image = self.imageMaster
         # Fills the image with white
         #self.image.fill(white)
+        self.image.fill(bg)
         # Makes transparent background
         # YOU NEED THIS FOR IT TO ROTATE
+        self.image.set_colorkey(bg)
         #self.image.set_colorkey(red)
         # Get rect frame of image
         self.rect = self.image.get_rect()
@@ -273,10 +275,10 @@ class ElectricityOrb(Player):
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = self.moveFactor
 
-    def draw(self):
-        Player.draw(self)
+    def update(self):
+        Player.update(self)
         screen.blit(self.orb_image,(self.rect.x,self.rect.y))
-        print 'I blitzed'
+
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
