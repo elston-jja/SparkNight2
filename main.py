@@ -251,13 +251,14 @@ class ElectricityOrb(Player):
         self.orb_image.set_colorkey(bg)
         self.obstacle = wall_list
 
+    def get_pos(self):
+        self.move()
 
     def move(self):
         '''
         Updates the velocities of the player after detecting a mouse click
         '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
-        self.collision = pygame.sprite.spritecollide(self,self.obstacle,True)
 
         #Gets position of mouse and finds difference in x and y cords of both points
         self.mouseMovePos = pygame.mouse.get_pos()
