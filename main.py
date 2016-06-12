@@ -299,6 +299,7 @@ def change_map(map_name):
     all_sprites_list.empty()
     wall_list.empty()
     exit_list.empty()
+    attack_sprites_list.empty()
 
     build.all_sprites_list.empty()
     build.exit_doors_list.empty()
