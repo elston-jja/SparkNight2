@@ -56,6 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+        self.obstacle = wall_list
 
     def get_pos(self):
         '''
@@ -86,7 +87,7 @@ class Player(pygame.sprite.Sprite):
         Updates the velocities of the player after detecting a mouse click
         '''
         #determines how many increment to move the object by, say the difference in x was 80, this would divide that by say 40 and get 2, so each update would add 2 to posx
-        self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+        self.collision = pygame.sprite.spritecollide(self,self.obstacle,False)
 
         #Gets position of mouse and finds difference in x and y cords of both points
         self.mouseMovePos = pygame.mouse.get_pos()
@@ -179,12 +180,13 @@ class Player(pygame.sprite.Sprite):
 
             self.moveTimer -= 1
 
-        def attack_Q(self):
-            '''
-            Creates the Q electricity ball attack, and projects it to wherever the mouse was
-            '''
-            orb = ElectricityOrb()
-            attack_sprites_list.add(orb)
+    def attack_Q(self):
+        '''
+        Creates the Q electricity ball attack, and projects it to wherever the mouse was
+        '''
+        orb = ElectricityOrb()
+        attack_sprites_list.add(orb)
+        all_sprites_list.add(orb)
 
 
 class ElectricityOrb(Player):
@@ -206,8 +208,8 @@ class ElectricityOrb(Player):
         # Get rect frame of image
         self.rect = self.image.get_rect()
         # angle to face mouse
-        self.rect.x = 150
-        self.rect.y = 150
+        self.rect.x = player.rect.x
+        self.rect.y = player.rect.y
         # Just placeholder
         self.angle = 0
         self.vely = 2
@@ -223,6 +225,12 @@ class ElectricityOrb(Player):
         self.remainderyvelocity = 0
         #Timer placeholder for how many seconds movement takes
         self.moveTimer = 0
+        self.orb_image = pygame.image.load("orb.png").convert()
+        self.orb_image.set_colorkey(bg)
+
+    def draw(self):
+        screen.blit(self.orb_image,self.rect.center)
+        print 'It worked?'
 
 
 def change_map(map_name):
