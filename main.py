@@ -132,25 +132,6 @@ class Player(pygame.sprite.Sprite):
                 #sets the trace to current
                 exec(traceAssign)
 
-
-    def update(self):
-        '''
-        Updates all of the movement attributes of the player each loop of the main loop
-        '''
-        #Movement Update
-        self.moveUpdate()
-        # Gets mouse position
-        self.get_pos()
-        # Gets the old center point
-        self.centerpoint = self.rect.center
-        # Rotate sprite
-        self.image = pygame.transform.rotate(self.imageMaster ,self.angle)
-        # Get rectangle frame
-        self.rect = self.image.get_rect()
-        # Sets the new image to the old center point
-        # Makes sure the sprite does not go flying to oblivion
-        self.rect.center = self.centerpoint
-
     def moveUpdate(self):
         '''
         Changes the x and y position of the player
@@ -195,6 +176,26 @@ class Player(pygame.sprite.Sprite):
         laser = Laser()
         attack_sprites_list.add(laser)
         all_sprites_list.add(laser)
+
+    def update(self):
+        '''
+        Updates all of the movement attributes of the player each loop of the main loop
+        '''
+        #Movement Update
+        self.moveUpdate()
+        # Gets mouse position
+        self.get_pos()
+        # Gets the old center point
+        self.centerpoint = self.rect.center
+        # Rotate sprite
+        self.image = pygame.transform.rotate(self.imageMaster ,self.angle)
+        # Get rectangle frame
+        self.rect = self.image.get_rect()
+        # Sets the new image to the old center point
+        # Makes sure the sprite does not go flying to oblivion
+        self.rect.center = self.centerpoint
+
+
 
 class ElectricityOrb(Player):
 
@@ -248,6 +249,7 @@ class ElectricityOrb(Player):
         self.orb_image.set_colorkey(bg)
         self.obstacle = obstacles_for_attacks
 
+
     def move(self):
         '''
         Updates the velocities of the player after detecting a mouse click
@@ -271,12 +273,10 @@ class ElectricityOrb(Player):
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = self.moveFactor
 
-    def get_pos(self):
-        pass
-
-    def draw(self):
+    def update(self):
         screen.blit(self.orb_image,(self.rect.x,self.rect.y))
-        #print 'It worked?'
+        Player.update(self)
+        print 'It worked?'
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
@@ -394,8 +394,6 @@ while not done:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
-                    for value in attack_sprites_list:
-                        value.move()
                 if event.key == pygame.K_r:
                     player.attack_R()
 
@@ -417,11 +415,11 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-        try:
+        """try:
             for values in attack_sprites_list:
                 values.draw()
         except:
-            pass
+            pass"""
         # Set tick rate to 60
         clock.tick(60)
 
