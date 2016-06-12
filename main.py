@@ -247,7 +247,7 @@ class ElectricityOrb(Player):
         self.collision = pygame.sprite.spritecollide(self,wall_list,False)
         self.orb_image = pygame.image.load("orb.png").convert()
         self.orb_image.set_colorkey(bg)
-        self.obstacle = obstacles_for_attacks
+        self.obstacle = wall_list
 
 
     def move(self):
@@ -273,10 +273,10 @@ class ElectricityOrb(Player):
         #this variable basically tells the main loop, how many times to update player pos before it reaches destination
         self.moveTimer = self.moveFactor
 
-    def update(self):
+    def draw(self):
+        Player.draw(self)
         screen.blit(self.orb_image,(self.rect.x,self.rect.y))
-        Player.update(self)
-        print 'It worked?'
+        print 'I blitzed'
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self):
@@ -417,11 +417,11 @@ while not done:
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
 
-        # Call update function of sprites
-        all_sprites_list.update()
-
         # fills background color
         screen.fill(bg)
+
+        # Call update function of sprites
+        all_sprites_list.update()
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
