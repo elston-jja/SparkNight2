@@ -64,6 +64,7 @@ class Player(pygame.sprite.Sprite):
         self.obstacle = wall_list
 
         self.pickachu_Master = pygame.image.load("pickachu.png").convert()
+        self.pickachu_Master = pygame.transform.rotate(self.pickachu_Master, 90)
         self.pickachu = self.pickachu_Master
         self.pickachu.set_colorkey(white)
 
@@ -199,10 +200,15 @@ class Player(pygame.sprite.Sprite):
         all_sprites_list.add(orb)
         #print 'it worked in the function?'
 
-    def attack_R(self):
-        laser = Laser()
-        attack_sprites_list.add(laser)
-        all_sprites_list.add(laser)
+    #def attack_R(self):
+#        laser = Laser()
+#        attack_sprites_list.add(laser)
+#        all_sprites_list.add(laser)
+
+    def attack_W(self):
+        area_of_effect = FieldofEffect()
+        attack_sprites_list.add(area_of_effect)
+        all_sprites_list.add(area_of_effect)
 
     def update(self):
         '''
@@ -279,7 +285,7 @@ class ElectricityOrb(pygame.sprite.Sprite):
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
-        self.orb_image = pygame.image.load("orb.png").convert()
+        self.orb_image = pygame.image.load("better_orb.png").convert()
         self.orb_image.set_colorkey(bg)
         self.obstacle = wall_list
         self.move()
@@ -306,6 +312,7 @@ class ElectricityOrb(pygame.sprite.Sprite):
             #If collision was at exit block, loads new map
             if self.exit_level or self.collision:
                 all_sprites_list.remove(self)
+                attack_sprites_list.remove(self)
 
     def move(self):
         '''
@@ -353,77 +360,119 @@ class ElectricityOrb(pygame.sprite.Sprite):
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
 
-        screen.blit(self.orb_image, (self.rect.x, self.rect.y))
+        screen.blit(self.orb_image, (self.rect.centerx, self.rect.centery))
 
 
-class Laser(pygame.sprite.Sprite):
+# class Laser(pygame.sprite.Sprite):
+#     def __init__(self):
+#
+#         pygame.sprite.Sprite.__init__(self)
+#
+#         self.image = pygame.Surface([player.width,player.height])
+#
+#         self.image.fill(white)
+#
+#         self.rect = self.image.get_rect()
+#
+#         self.attack_image = pygame.image.load("bolt.png").convert()
+#
+#     def get_pos(self):
+#         # Gets Mouse X and Y cords
+#         self.mousex = pygame.mouse.get_pos()[0]
+#         self.mousey = pygame.mouse.get_pos()[1]
+#         # Gets player cords X and Y
+#         self.currentx = player.rect.centerx
+#         self.currenty = player.rect.centery
+#         # Gets the  difference in X and Y
+#         self.dx = (self.mousex - self.currentx)
+#         self.dy = (self.mousey - self.currenty)
+#         # Get angle towards mouse from object
+#         self.mouse_angle = degrees(atan2(-(self.dy), self.dx))
+#         if self.mouse_angle < 0:
+#             self.mouse_angle += 360
+#         # Gets Hypotenuse
+#         self.c = (self.dy ** 2 + self.dx ** 2) ** (1 / 2.0)
+#
+#     def draw_rect_towards_mouse(self):
+#         self.amount_of_rect = int(self.c / 30)
+#         if self.amount_of_rect > 0:
+#             for i in range(self.amount_of_rect):
+#                 screen.blit(self.attack_image, (self.rect.x,self.rect.y))
+#                 self.rect.x += abs(self.dx)
+#                 self.rect.y += abs(self.dy)
+#
+#     def update(self):
+#         self.get_pos()
+#         self.draw_rect_towards_mouse()
+#     #def draw(self):
+# #        screen.blit(self.attack_image, (self.rect.x,self.rect.y))
+#
+#
+
+class FieldofEffect(pygame.sprite.Sprite):
+
     def __init__(self):
 
         pygame.sprite.Sprite.__init__(self)
-        pass
+        # Initial width, height, and field size
+        self.height = 2
+        self.width = 2
+        self.field_level = 2
 
-    def get_pos(self):
+        # Number of times to loop animation
+        self.loop_animation = 5
 
-        self.mousex = pygame.mouse.get_pos()[0]
-        self.mousey = pygame.mouse.get_pos()[1]
+    def draw(self):
+        # Increase Field level
+        self.field_level += 2
 
-        self.currentx = player.rect.centerx
-        self.currenty = player.rect.centery
-
-        self.dx = (self.mousex - self.currentx)
-        self.dy = (self.mousey - self.currenty)
-        #self.dx = self.currentx - self.mousex
-        #self.dy = self.currenty - self.mousey
-
-        self.mouse_angle = degrees(atan2(-(self.dy), self.dx))
-        if self.mouse_angle < 0:
-            self.mouse_angle += 360
-
-        self.c = self.dy ** 2 + self.dx ** 2
-        self.c = self.c ** (1 / 2.0)
-
-    def get_master(self):
-
-        self.masterimage = pygame.Surface([self.c, 5])
-
-        self.image = self.masterimage
-
+        # Draw Surface
+        self.image = pygame.Surface([self.width,self.height])
         self.rect = self.image.get_rect()
+        self.image.set_colorkey(bg)
+        #self.image.fill(red)
 
-        self.image.set_colorkey(white)
-        self.image.fill(red)
+        # set center points to player
+        self.rect.centerx = player.rect.centerx
+        self.rect.centery = player.rect.centery
 
-    def set_pos(self):
+        # draw circle
+        pygame.draw.circle(screen,green,player.rect.center,self.field_level,1)
 
-        self.rect.x = player.rect.center[0]
-        self.rect.y = player.rect.center[1]
+        # When circle radius(field size) is max, reset the field size
+        # reset the width and the height of the image and count to 1 less loop
+        if self.field_level > 80:
+            self.field_level = 2
+            self.loop_animation -= 1
+            self.width = 2
+            self.height = 2
+        # When increase the width and the height by 4 (of surface)
+        self.width += 4
+        self.height += 4
 
-    def debug(self):
+        # Makes sure the object is removed durring a level change or
+        # removes an enemy when hit
+        self.check_collisions()
 
-        print ("------DEBUG-------- %s") #% (self.debugnumber)
-        #self.debugnumber += 1
-        print (("\n Mouse angle\n\t" + str(self.mouse_angle) + "\n"))
-        print (("self.c\n\t" + str(self.c)))
-        print (" Current dx and dy values \n")
-        print (("\t" + str(self.dx)))
-        print (("\t" + str(self.dy)))
-        print (("\n Current X and Y values for image"))
-        print (("\t" + str(self.rect.x)))
-        print (("\t" + str(self.rect.y)))
-        print (("\n Bottom Pos\n\n\t" + str(self.rect.bottom)))
-        print (("\n Top Pos\n\n\t" + str(self.rect)))
+        # When done looping, remove itself from the drawn classes
+        if self.loop_animation < 0:
+            attack_sprites_list.remove(self)
+            all_sprites_list.remove(self)
+
+    def check_collisions(self):
+        self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+        #If collision was at exit block, loads new map
+        if self.exit_level:
+            all_sprites_list.remove(self)
+            attack_sprites_list.remove(self)
 
     def update(self):
+        self.draw()
 
-        self.get_pos()
+class Overlay(pygame.sprite.Sprite):
 
-        self.get_master()
-        self.image = pygame.transform.rotate(self.masterimage, self.mouse_angle)
-        self.rect = self.image.get_rect()
-        #self.rect = player.rect
-        self.set_pos()
-        self.debug()
-
+    def __init__(self):
+        pygame.sprite.Sprite
 
 def change_map(map_name):
     '''
@@ -508,8 +557,10 @@ while not done:
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
-                if event.key == pygame.K_r:
-                    player.attack_R()
+                #if event.key == pygame.K_r:
+                #    player.attack_R()
+                if event.key == pygame.K_w:
+                    player.attack_W()
                 if event.key == pygame.K_c:
                     done = True
 
@@ -529,11 +580,7 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-        """try:
-            for values in attack_sprites_list:
-                values.draw()
-        except:
-            pass"""
+
         # Set tick rate to 60
         clock.tick(60)
 
