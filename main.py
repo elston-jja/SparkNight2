@@ -288,11 +288,9 @@ class ElectricityOrb(Player):
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
         self.orb_image = pygame.image.load("better_orb.png").convert()
-        #self.orb_image = pygame.image.load("orb_explosion.png").convert()
-        #self.orb_image = pygame.image.load("orb.png").convert()
-        #self.orbExplision_image = pygame.image.load("orb_explosion_large.png").convert()
+        self.orbExplision_image = pygame.image.load("orb_explosion_large.png").convert()
         self.orb_image.set_colorkey(bg)
-        #self.orbExplision_image.set_colorkey(bg)
+        self.orbExplision_image.set_colorkey(bg)
         self.obstacle = wall_list
         self.exploded = False
         self.move()
@@ -316,19 +314,20 @@ class ElectricityOrb(Player):
             #Checks to see if a collision occured after the move
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
             self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+            self.collisionTrace = None
             #self.enemy_collision = pygame.sprite.spritecollide(self,enemy_list,False)
             #If collision was at exit block, loads new map
 
-            if self.exit_level or self.collision:
-                all_sprites_list.remove(self)
-                attack_sprites_list.remove(self)
-            if self.exit_level or self.collision: #or self.enemy_collision:
-                self.moveTimer = 10
+            
+            if (self.exit_level or self.collision): #or self.enemy_collision:
+                self.moveTimer = 15
                 self.exploded = True
+                #print "it's colliding"
                 self.changeVelocityAfterCollision()
             if self.moveTimer <= 10:
                 self.exploded = True
             self.moveTimer -= 1
+            #print 'Its subtracting'
         else:
             all_sprites_list.remove(self)
 
@@ -378,58 +377,61 @@ class ElectricityOrb(Player):
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
 
-        #if self.exploded:
-        #    orbDrawImage = self.orbExplision_image
-        #else:
-        #    orbDrawImage = self.orb_image
-        self.orbDrawImage = self.orb_image
+        if self.exploded:
+            self.orbDrawImage = self.orbExplision_image
+            #print 'Allah Akbar'
+        else:
+            self.orbDrawImage = self.orb_image
+        
         screen.blit(self.orbDrawImage, (self.rect.centerx, self.rect.centery))
 
+'''
+class Laser(pygame.sprite.Sprite):
+    
+    def __init__(self):
 
-# class Laser(pygame.sprite.Sprite):
-#     def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
 
-#         pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.Surface([player.width,player.height])
 
-#         self.image = pygame.Surface([player.width,player.height])
+        self.image.fill(white)
 
-#         self.image.fill(white)
+        self.rect = self.image.get_rect()
 
-#         self.rect = self.image.get_rect()
+        self.attack_image = pygame.image.load("bolt.png").convert()
+    
+    def get_pos(self):
+    
+        # Gets Mouse X and Y cords
+        self.mousex = pygame.mouse.get_pos()[0]
+        self.mousey = pygame.mouse.get_pos()[1]
+        # Gets player cords X and Y
+        self.currentx = player.rect.centerx
+        self.currenty = player.rect.centery
+        # Gets the  difference in X and Y
+        self.dx = (self.mousex - self.currentx)
+        self.dy = (self.mousey - self.currenty)
+        # Get angle towards mouse from object
+        self.mouse_angle = degrees(atan2(-(self.dy), self.dx))
+        if self.mouse_angle < 0:
+            self.mouse_angle += 360
+        # Gets Hypotenuse
+        self.c = (self.dy ** 2 + self.dx ** 2) ** (1 / 2.0)
 
-#         self.attack_image = pygame.image.load("bolt.png").convert()
+    def draw_rect_towards_mouse(self):
+        self.amount_of_rect = int(self.c / 30)
+        if self.amount_of_rect > 0:
+            for i in range(self.amount_of_rect):
+                screen.blit(self.attack_image, (self.rect.x,self.rect.y))#                 self.rect.x += abs(self.dx)
+                self.rect.y += abs(self.dy)
 
-#     def get_pos(self):
-#         # Gets Mouse X and Y cords
-#         self.mousex = pygame.mouse.get_pos()[0]
-#         self.mousey = pygame.mouse.get_pos()[1]
-#         # Gets player cords X and Y
-#         self.currentx = player.rect.centerx
-#         self.currenty = player.rect.centery
-#         # Gets the  difference in X and Y
-#         self.dx = (self.mousex - self.currentx)
-#         self.dy = (self.mousey - self.currenty)
-#         # Get angle towards mouse from object
-#         self.mouse_angle = degrees(atan2(-(self.dy), self.dx))
-#         if self.mouse_angle < 0:
-#             self.mouse_angle += 360
-#         # Gets Hypotenuse
-#         self.c = (self.dy ** 2 + self.dx ** 2) ** (1 / 2.0)
-
-#     def draw_rect_towards_mouse(self):
-#         self.amount_of_rect = int(self.c / 30)
-#         if self.amount_of_rect > 0:
-#             for i in range(self.amount_of_rect):
-#                 screen.blit(self.attack_image, (self.rect.x,self.rect.y))
-#                 self.rect.x += abs(self.dx)
-#                 self.rect.y += abs(self.dy)
-
-#     def update(self):
-#         self.get_pos()
-#         self.draw_rect_towards_mouse()
-#     #def draw(self):
-# #        screen.blit(self.attack_image, (self.rect.x,self.rect.y))
-
+    def update(self):
+        self.get_pos()
+        self.draw_rect_towards_mouse()
+        
+    #def draw(self):
+        #screen.blit(self.attack_image, (self.rect.x,self.rect.y))"""
+'''
 
 
 class FieldofEffect(pygame.sprite.Sprite):
@@ -546,7 +548,7 @@ green = (0, 255, 0)
 yellowInBlackGuy = (241,203,121)
 
 # Screen
-screen = pygame.display.set_mode([width, height])
+screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
 pygame.display.set_caption("testing mouse and player")
 
 draw_map = build.Level("map1")
