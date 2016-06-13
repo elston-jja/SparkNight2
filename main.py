@@ -178,7 +178,8 @@ class Player(pygame.sprite.Sprite):
             )
             #If collision was at exit block, loads new map
             if self.exit_level:
-                self.map_number +=1
+                self.map_number += 1
+                self.map_number = self.map_number % 5
                 change_map("map" + str(self.map_number))
             #if not exit block, but normal wall cancel last movement
             elif self.collision:
@@ -312,14 +313,18 @@ class ElectricityOrb(Player):
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
             #Checks to see if a collision occured after the move
+            if self.collision and self.moveTimer == 14:
+                isDoubleCollision = True
+            else:
+                isDoubleCollision = False
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
             self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
             self.collisionTrace = None
             #self.enemy_collision = pygame.sprite.spritecollide(self,enemy_list,False)
             #If collision was at exit block, loads new map
 
-            
-            if (self.exit_level or self.collision): #or self.enemy_collision:
+
+            if (self.exit_level or self.collision and not isDoubleCollision): #or self.enemy_collision:
                 self.moveTimer = 15
                 self.exploded = True
                 #print "it's colliding"
@@ -382,12 +387,12 @@ class ElectricityOrb(Player):
             #print 'Allah Akbar'
         else:
             self.orbDrawImage = self.orb_image
-        
+
         screen.blit(self.orbDrawImage, (self.rect.centerx, self.rect.centery))
 
 '''
 class Laser(pygame.sprite.Sprite):
-    
+
     def __init__(self):
 
         pygame.sprite.Sprite.__init__(self)
@@ -399,9 +404,9 @@ class Laser(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.attack_image = pygame.image.load("bolt.png").convert()
-    
+
     def get_pos(self):
-    
+
         # Gets Mouse X and Y cords
         self.mousex = pygame.mouse.get_pos()[0]
         self.mousey = pygame.mouse.get_pos()[1]
@@ -428,7 +433,7 @@ class Laser(pygame.sprite.Sprite):
     def update(self):
         self.get_pos()
         self.draw_rect_towards_mouse()
-        
+
     #def draw(self):
         #screen.blit(self.attack_image, (self.rect.x,self.rect.y))"""
 '''
