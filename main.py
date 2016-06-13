@@ -59,6 +59,7 @@ class Player(pygame.sprite.Sprite):
         #Dont know what this guy does, but probabley sets
         #what the moveTimr can do
         self.moveFactor = 40
+        self.map_number = 0
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
         self.obstacle = wall_list
@@ -177,7 +178,8 @@ class Player(pygame.sprite.Sprite):
             )
             #If collision was at exit block, loads new map
             if self.exit_level:
-                change_map("map0")
+                self.map_number +=1
+                change_map("map" + str(self.map_number))
             #if not exit block, but normal wall cancel last movement
             elif self.collision:
                 if self.moveTimer % 2 == 0:
@@ -441,7 +443,7 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.field_level = 2
 
         # Number of times to loop animation
-        self.loop_animation = 5
+        self.loop_animation = 3
 
     def draw(self):
         # Increase Field level
@@ -533,7 +535,7 @@ yellowInBlackGuy = (241,203,121)
 screen = pygame.display.set_mode([width, height])
 pygame.display.set_caption("testing mouse and player")
 
-draw_map = build.Level("map2")
+draw_map = build.Level("map1")
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
