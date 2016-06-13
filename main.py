@@ -66,6 +66,7 @@ class Player(pygame.sprite.Sprite):
 
         self.pickachu_Master = pygame.image.load("pickachu.png").convert()
         self.pickachu_Master = pygame.transform.rotate(self.pickachu_Master, 90)
+        self.pickachu_Master = pygame.transform.scale(self.pickachu_Master, (35,35))
         self.pickachu = self.pickachu_Master
         self.pickachu.set_colorkey(white)
 
@@ -179,7 +180,7 @@ class Player(pygame.sprite.Sprite):
             #If collision was at exit block, loads new map
             if self.exit_level:
                 self.map_number += 1
-                self.map_number = self.map_number % 5
+                self.map_number = self.map_number
                 change_map("map" + str(self.map_number))
             #if not exit block, but normal wall cancel last movement
             elif self.collision:
@@ -592,9 +593,9 @@ class Wall(pygame.sprite.Sprite):
 
 class Overlay(pygame.sprite.Sprite):
 
-    def __init__(self, lives):
+    def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.lives = lives
+        self.lives = 3
         pygame.font.init()
         self.font = pygame.font.SysFont("Calibri",20)
         self.live_text = self.font.render("Lives: ",True,bg)
@@ -660,7 +661,6 @@ blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
 yellowInBlackGuy = (241,203,121)
-lives_left = 3
 
 
 # Screen
@@ -675,7 +675,7 @@ wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
 exit_doors_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
-overlay = Overlay(lives_left)
+overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 
 draw_map = Level("map1")
@@ -725,6 +725,7 @@ while not done:
                 #    player.attack_R()
                 if event.key == pygame.K_w:
                     player.attack_W()
+                    #overlay.lives -= 1
                 if event.key == pygame.K_c:
                     done = True
 
