@@ -596,8 +596,8 @@ class Overlay(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.lives = lives
         pygame.font.init()
-        self.font = pygame.font.SysFont("Calibri",15)
-        self.live_text = self.font.render("Lives: ",True,white)
+        self.font = pygame.font.SysFont("Calibri",20)
+        self.live_text = self.font.render("Lives: ",True,bg)
         self.width = 40
         self.height = 80
         self.image = pygame.Surface([self.width, self.height])
@@ -700,7 +700,7 @@ clock = pygame.time.Clock()
 # Fill background (Makes cicle, when loop screen.fill is commented)
 #screen.fill(bg)
 
-background = pygame.image.load("background.png")
+background = pygame.image.load("background2.jpg").convert()
 background = pygame.transform.scale(background,(1440,900))
 
 # LOOP
@@ -728,7 +728,7 @@ while not done:
                 if event.key == pygame.K_c:
                     done = True
 
-        
+
         #Move player Position###
         #Defines borders which player should not be able to pass
         playerWidthBorder = playerWidth / 2 + 5 + 30
@@ -737,13 +737,13 @@ while not done:
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
 
-        
+
         # fills background color
         screen.fill(bg)
         screen.blit(background,(0,0))
         # Call update function of sprites
         all_sprites_list.update()
-        
+
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
 
@@ -753,7 +753,7 @@ while not done:
         clock.tick(60)
         #toggle_fullscreen()
         # Redraw screen
-        
+
         pygame.display.flip()
 
 # Quit if loop is exited
