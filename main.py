@@ -548,6 +548,9 @@ class Level:
                     wall = Wall(x,y,yellow)
                     wall_list.add(wall)
                     all_sprites_list.add(wall)
+                elif char == "P":
+                    player.rect.x = x
+                    player.rect.y = y
                     # When drawing each block
                     # (Character in row)
                     # Move 30px to the right
@@ -697,6 +700,9 @@ clock = pygame.time.Clock()
 # Fill background (Makes cicle, when loop screen.fill is commented)
 #screen.fill(bg)
 
+background = pygame.image.load("background.png")
+background = pygame.transform.scale(background,(1440,900))
+
 # LOOP
 done = False
 
@@ -722,6 +728,7 @@ while not done:
                 if event.key == pygame.K_c:
                     done = True
 
+        
         #Move player Position###
         #Defines borders which player should not be able to pass
         playerWidthBorder = playerWidth / 2 + 5 + 30
@@ -730,12 +737,13 @@ while not done:
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
 
+        
         # fills background color
         screen.fill(bg)
-
+        screen.blit(background,(0,0))
         # Call update function of sprites
         all_sprites_list.update()
-
+        
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
 
@@ -745,6 +753,7 @@ while not done:
         clock.tick(60)
         #toggle_fullscreen()
         # Redraw screen
+        
         pygame.display.flip()
 
 # Quit if loop is exited
