@@ -467,7 +467,7 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.rect.centery = player.rect.centery
 
         # draw circle
-        pygame.draw.circle(screen,green,player.rect.center,self.field_level,1)
+        pygame.draw.circle(screen,red,player.rect.center,self.field_level,1)
 
         # When circle radius(field size) is max, reset the field size
         # reset the width and the height of the image and count to 1 less loop
