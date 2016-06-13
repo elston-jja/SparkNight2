@@ -9,6 +9,7 @@ ICS 3U1
 import pygame
 from pygame import *
 from map_list import maps
+#import main
 
 class Level:
 
@@ -74,14 +75,18 @@ class Wall(pygame.sprite.Sprite):
 
         # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
-
+        
+        
         self.image = pygame.Surface([30,30])
         self.image.convert()
         self.rect = self.image.get_rect()
-
+        self.block = pygame.image.load("wall.gif").convert()
+        self.block = pygame.transform.scale(self.block,[30,30])
         self.image.fill(color)
+        screen.blit(self.block,[x,y])
         self.rect.x = x
         self.rect.y = y
+        
 
     def update(self):
         pass
@@ -92,8 +97,8 @@ class Wall(pygame.sprite.Sprite):
 
 # # dimentions of screen
 
-# width = 1440
-# height = 900
+width = 1440
+height = 900
 
 # COLORS
 bg = (0,0,0)
@@ -106,7 +111,8 @@ yellow = (255,255,0)
 purple = (128,0,128)
 
 # # Screen
-# screen = pygame.display.set_mode([width,height])
+screen = pygame.display.set_mode([width,height])
+#screen = main.screen
 # pygame.display.set_caption("Level Example")
 
 # # Create sprite group

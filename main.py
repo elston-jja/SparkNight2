@@ -4,9 +4,9 @@ Move Towards Mouse
 '''
 
 import pygame
-import build
 from math import *
 from pygame.locals import *
+from map_list import maps
 
 class Player(pygame.sprite.Sprite):
 
@@ -499,11 +499,99 @@ class FieldofEffect(pygame.sprite.Sprite):
     def update(self):
         self.draw()
 
+class Level:
+
+    def __init__(self,level):
+        # State the initial level number
+        # Value not needed except for verbosity
+        self.level = level
+        # Default x y starting block cordinates
+        x = 0
+        y = 0
+        # Creates object called "list of maps" and I can call all maps
+        # From the lists in the maps_list file
+        list_of_maps = maps()
+        # Get the level from maps_list and load it into the interpreter
+        # Change the current level to the list varible in the maps_list file
+        exec_var = "self.current_level = list_of_maps." + str(self.level)
+        exec (exec_var)
+        # Get the lines/rows from each variable in the list
+        for line_row in self.current_level:
+            # Check each character in the row
+            for char in line_row:
+                # if the character is a 'w' then add a wall block (30,30)
+                if char == "w":
+                    wall = Wall(x,y,grey)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                # If the character is an 'e' then add an wall block
+                # That when collided can cause to exit
+                # As it is added to the exitdoor list (change var is need be)
+                if char == "e":
+                    exit_ = Wall(x,y,red)
+                    wall_list.add(exit_)
+                    exit_doors_list.add(exit_)
+                    all_sprites_list.add(exit_)
+                elif char == "y":
+                    wall = Wall(x,y,yellow)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                elif char == "g":
+                    wall = Wall(x,y,green)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                elif char == "p":
+                    wall = Wall(x,y,purple)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                elif char == "y":
+                    wall = Wall(x,y,yellow)
+                    wall_list.add(wall)
+                    all_sprites_list.add(wall)
+                    # When drawing each block
+                    # (Character in row)
+                    # Move 30px to the right
+                x+= 30
+                # When moving down to next row change the Y by 30
+                # Reset the X
+            y+=30
+            x = 0
+
+class Wall(pygame.sprite.Sprite):
+
+    def __init__(self,x,y,color):
+
+        # Base sprite class with collisions
+        pygame.sprite.Sprite.__init__(self) 
+        self.image = pygame.Surface([30,30])
+        self.rect = self.image.get_rect()
+        self.color = color
+        self.image.fill(color)
+        if self.color == grey:
+            self.image.set_colorkey(color)
+            self.block = pygame.image.load("wall.png").convert()
+            self.block = pygame.transform.scale(self.block,(30,30))
+        elif self.color == red:
+            self.image.set_colorkey(color)
+            self.block = pygame.image.load("exit.png").convert_alpha()
+            self.block = pygame.transform.scale(self.block,(30,30))
+        self.x = x
+        self.y = y
+        self.rect.x = x
+        self.rect.y = y
+        #screen.blit(self.block,(90,90))
+        
+    def update(self):
+        if self.color == grey:
+            screen.blit(self.block,(self.x,self.y))
+        if self.color == red:
+            screen.blit(self.block,(self.x,self.y))
+            
 class Overlay(pygame.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, lives):
         pygame.sprite.Sprite.__init__(self)
-        self.lives = 3
+        self.lives = lives
         pygame.font.init()
         self.font = pygame.font.SysFont("Calibri",15)
         self.live_text = self.font.render("Lives: ",True,white)
@@ -512,7 +600,7 @@ class Overlay(pygame.sprite.Sprite):
         self.image = pygame.Surface([self.width, self.height])
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
-        self.hearts = pygame.image.load("heart.png").convert()
+        self.hearts = pygame.image.load("heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
 
     def update(self):
@@ -538,17 +626,16 @@ def change_map(map_name):
     exit_list.empty()
     attack_sprites_list.empty()
 
-    build.all_sprites_list.empty()
-    build.exit_doors_list.empty()
-    build.wall_list.empty()
+    #build.all_sprites_list.empty()
+    exit_doors_list.empty()
+    #build.wall_list.empty()
 
-    build.Level(map_name)
+    Level(map_name)
 
-    all_sprites_list.add(player)
-
-    all_sprites_list.add(build.all_sprites_list)
-    wall_list.add(build.wall_list)
-    exit_list.add(build.exit_doors_list)
+    all_sprites_list.add(player, overlay, all_sprites_list)
+    #all_sprites_list.add(all_sprites_list)
+    wall_list.add(wall_list)
+    exit_list.add(exit_doors_list)
 
 pygame.init()
 
@@ -561,22 +648,34 @@ bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
+#bg = (0,0,0)
+grey = (211,211,211)
+white = (255,255,255)
+#red = (220,100,100)
+#green = (0,255,0)
+blue = (0,0,255)
+yellow = (255,255,0)
+purple = (128,0,128)
 yellowInBlackGuy = (241,203,121)
+lives_left = 3
+
 
 # Screen
 screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
 pygame.display.set_caption("testing mouse and player")
 
-draw_map = build.Level("map1")
+lives_left = 3
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
+exit_doors_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
-overlay = Overlay()
-#enemy_list = pygame.sprite.Group()
+overlay = Overlay(lives_left)
+enemy_list = pygame.sprite.Group()
 
+draw_map = Level("map1")
 
 playerWidth = 30
 playerHeight = 30
@@ -584,10 +683,10 @@ player = Player(playerWidth, playerHeight)
 
 # Adds player to sprites list
 all_sprites_list.add(player)
-all_sprites_list.add(build.all_sprites_list)
+#all_sprites_list.add(all_sprites_list)
 all_sprites_list.add(overlay)
-wall_list.add(build.wall_list)
-exit_list.add(build.exit_doors_list)
+wall_list.add(wall_list)
+exit_list.add(exit_doors_list)
 
 
 obstacles_for_attacks = wall_list
