@@ -388,17 +388,17 @@ class ElectricityOrb(Player):
 
 # class Laser(pygame.sprite.Sprite):
 #     def __init__(self):
-#
+
 #         pygame.sprite.Sprite.__init__(self)
-#
+
 #         self.image = pygame.Surface([player.width,player.height])
-#
+
 #         self.image.fill(white)
-#
+
 #         self.rect = self.image.get_rect()
-#
+
 #         self.attack_image = pygame.image.load("bolt.png").convert()
-#
+
 #     def get_pos(self):
 #         # Gets Mouse X and Y cords
 #         self.mousex = pygame.mouse.get_pos()[0]
@@ -415,7 +415,7 @@ class ElectricityOrb(Player):
 #             self.mouse_angle += 360
 #         # Gets Hypotenuse
 #         self.c = (self.dy ** 2 + self.dx ** 2) ** (1 / 2.0)
-#
+
 #     def draw_rect_towards_mouse(self):
 #         self.amount_of_rect = int(self.c / 30)
 #         if self.amount_of_rect > 0:
@@ -423,14 +423,14 @@ class ElectricityOrb(Player):
 #                 screen.blit(self.attack_image, (self.rect.x,self.rect.y))
 #                 self.rect.x += abs(self.dx)
 #                 self.rect.y += abs(self.dy)
-#
+
 #     def update(self):
 #         self.get_pos()
 #         self.draw_rect_towards_mouse()
 #     #def draw(self):
 # #        screen.blit(self.attack_image, (self.rect.x,self.rect.y))
-#
-#
+
+
 
 class FieldofEffect(pygame.sprite.Sprite):
 
@@ -495,8 +495,22 @@ class FieldofEffect(pygame.sprite.Sprite):
 class Overlay(pygame.sprite.Sprite):
 
     def __init__(self):
-        pygame.sprite.Sprite
+        pygame.sprite.Sprite.__init__(self)
+        self.lives = 3
+        pygame.font.init()
+        self.font = pygame.font.SysFont("Calibri",15)
+        self.live_text = font.render("Lives")
+        self.width = 40
+        self.height = 80
+        self.image = pygame.Surface([self.width, self.height])
+        
 
+    def update(self):
+        screen.blit(self.live_text, 1, white)
+        
+        
+
+        
 def change_map(map_name):
     '''
     Builds new map when exit encountred, and creates new walls
