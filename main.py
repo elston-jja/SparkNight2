@@ -227,7 +227,7 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
 
-class ElectricityOrb(pygame.sprite.Sprite):
+class ElectricityOrb(Player):
 
     def __init__(self):
 
@@ -279,9 +279,13 @@ class ElectricityOrb(pygame.sprite.Sprite):
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
+        self.orb_image = pygame.image.load("orb_explosion.png").convert()
         self.orb_image = pygame.image.load("orb.png").convert()
+        self.orbExplision_image = pygame.image.load("orb_explosion_large.png").convert()
         self.orb_image.set_colorkey(bg)
+        self.orbExplision_image.set_colorkey(bg)
         self.obstacle = wall_list
+        self.exploded = False
         self.move()
 
     def get_pos(self):
@@ -303,9 +307,17 @@ class ElectricityOrb(pygame.sprite.Sprite):
             #Checks to see if a collision occured after the move
             self.collision = pygame.sprite.spritecollide(self,wall_list,False)
             self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
+            #self.enemy_collision = pygame.sprite.spritecollide(self,enemy_list,False)
             #If collision was at exit block, loads new map
-            if self.exit_level or self.collision:
-                all_sprites_list.remove(self)
+            if self.exit_level or self.collision: #or self.enemy_collision:
+                self.moveTimer = 10
+                self.exploded = True
+                self.changeVelocityAfterCollision()
+            if self.moveTimer <= 10:
+                self.exploded = True
+            self.moveTimer -= 1
+        else:
+            all_sprites_list.remove(self)
 
     def move(self):
         '''
@@ -336,7 +348,7 @@ class ElectricityOrb(pygame.sprite.Sprite):
 
         #this variable basically tells the main loop, how many times
         # to update player pos before it reaches destination
-        self.moveTimer = self.moveFactor
+        self.moveTimer = self.moveFactor + 40
 
     def update(self):
         #Movement Update
@@ -353,7 +365,11 @@ class ElectricityOrb(pygame.sprite.Sprite):
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
 
-        screen.blit(self.orb_image, (self.rect.x, self.rect.y))
+        if self.exploded:
+            orbDrawImage = self.orbExplision_image
+        else:
+            orbDrawImage = self.orb_image
+        screen.blit(orbDrawImage, (self.rect.x, self.rect.y))
 
 
 class Laser(pygame.sprite.Sprite):
