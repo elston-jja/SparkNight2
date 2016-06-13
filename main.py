@@ -6,7 +6,7 @@ Move Towards Mouse
 import pygame
 import build
 from math import *
-
+from pygame.locals import *
 
 class Player(pygame.sprite.Sprite):
 
@@ -499,18 +499,29 @@ class Overlay(pygame.sprite.Sprite):
         self.lives = 3
         pygame.font.init()
         self.font = pygame.font.SysFont("Calibri",15)
-        self.live_text = font.render("Lives")
+        self.live_text = self.font.render("Lives: ",True,white)
         self.width = 40
         self.height = 80
         self.image = pygame.Surface([self.width, self.height])
-        
+        self.rect = self.image.get_rect()
+        self.image.set_colorkey(bg)
+        self.hearts = pygame.image.load("heart.png").convert()
+        self.hearts = pygame.transform.scale(self.hearts,(30,30))
 
     def update(self):
-        screen.blit(self.live_text, 1, white)
-        
-        
+        screen.blit(self.live_text, (40,40))
+        if self.lives == 3:
+            screen.blit(self.hearts,(40, 60))
+            screen.blit(self.hearts,(80, 60))
+            screen.blit(self.hearts,(120, 60))
+        if self.lives == 2:
+            screen.blit(self.hearts,(40, 60))
+            screen.blit(self.hearts,(80, 60))
+        if self.lives == 1:
+            screen.blit(self.hearts,(40, 60))
+        if self.lives == 0:
+            pygame.quit()
 
-        
 def change_map(map_name):
     '''
     Builds new map when exit encountred, and creates new walls
@@ -556,10 +567,10 @@ all_sprites_list = pygame.sprite.Group()
 wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
+overlay = Overlay()
 #enemy_list = pygame.sprite.Group()
 
 
-# Create object player
 playerWidth = 30
 playerHeight = 30
 player = Player(playerWidth, playerHeight)
@@ -567,8 +578,11 @@ player = Player(playerWidth, playerHeight)
 # Adds player to sprites list
 all_sprites_list.add(player)
 all_sprites_list.add(build.all_sprites_list)
+all_sprites_list.add(overlay)
 wall_list.add(build.wall_list)
 exit_list.add(build.exit_doors_list)
+
+
 obstacles_for_attacks = wall_list
 
 # Game time for clock functions
@@ -586,6 +600,7 @@ while not done:
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
+                # Create object player
                 button_pressed = pygame.mouse.get_pressed()
                 #print button_pressed
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -620,7 +635,7 @@ while not done:
 
         # Set tick rate to 60
         clock.tick(60)
-
+        #toggle_fullscreen()
         # Redraw screen
         pygame.display.flip()
 
