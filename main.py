@@ -379,6 +379,7 @@ class ElectricityOrb(Player):
         #if self.exploded:
         #    orbDrawImage = self.orbExplision_image
         #else:
+        #    orbDrawImage = self.orb_image
         self.orbDrawImage = self.orb_image
         screen.blit(self.orbDrawImage, (self.rect.centerx, self.rect.centery))
 
