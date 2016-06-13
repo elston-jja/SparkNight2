@@ -242,8 +242,8 @@ class ElectricityOrb(Player):
 
         pygame.sprite.Sprite.__init__(self)
         # Width and height of image
-        self.width = 10
-        self.height = 10
+        self.width = 30
+        self.height = 30
         # Creates images (CREATE TWO, one for reference later)
         self.imageMaster = pygame.Surface([self.width, self.height])
         self.image = self.imageMaster
@@ -388,7 +388,7 @@ class ElectricityOrb(Player):
         else:
             self.orbDrawImage = self.orb_image
 
-        screen.blit(self.orbDrawImage, (self.rect.centerx, self.rect.centery))
+        screen.blit(self.orbDrawImage, (self.rect.x, self.rect.y))
 
 '''
 class Laser(pygame.sprite.Sprite):
@@ -562,7 +562,7 @@ class Wall(pygame.sprite.Sprite):
     def __init__(self,x,y,color):
 
         # Base sprite class with collisions
-        pygame.sprite.Sprite.__init__(self) 
+        pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([30,30])
         self.rect = self.image.get_rect()
         self.color = color
@@ -580,13 +580,13 @@ class Wall(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         #screen.blit(self.block,(90,90))
-        
+
     def update(self):
         if self.color == grey:
             screen.blit(self.block,(self.x,self.y))
         if self.color == red:
             screen.blit(self.block,(self.x,self.y))
-            
+
 class Overlay(pygame.sprite.Sprite):
 
     def __init__(self, lives):
@@ -738,6 +738,8 @@ while not done:
 
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
+
+        wall_list.update()
 
         # Set tick rate to 60
         clock.tick(60)
