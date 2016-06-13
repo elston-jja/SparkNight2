@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.image.fill(white)
         # Makes transparent background
         # YOU NEED THIS FOR IT TO ROTATE
-        self.image.set_colorkey(red)
+        self.image.set_colorkey(white)
         # Get rect frame of image
         self.rect = self.image.get_rect()
         # angle to face mouse
@@ -63,6 +63,10 @@ class Player(pygame.sprite.Sprite):
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
         self.obstacle = wall_list
 
+        self.pickachu_Master = pygame.image.load("pickachu.png").convert()
+        self.pickachu = self.pickachu_Master
+        self.pickachu.set_colorkey(white)
+
     def get_pos(self):
         '''
         Gets the position and angle of the mouse, and adjusts the
@@ -80,6 +84,7 @@ class Player(pygame.sprite.Sprite):
 
         # Var for move function
         self.mouse_angle = degrees(self.mouse_angle)
+        #Possibley does nothing
         self.angle_move = self.mouse_angle
 
         # Sets angle value in class
@@ -212,14 +217,17 @@ class Player(pygame.sprite.Sprite):
         self.centerpoint = self.rect.center
         # Rotate sprite
         self.image = pygame.transform.rotate(self.imageMaster, self.angle)
+        self.pickachu = pygame.transform.rotate(self.pickachu_Master, self.angle)
         # Get rectangle frame
         self.rect = self.image.get_rect()
         # Sets the new image to the old center point
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
 
+        screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
-class ElectricityOrb(Player):
+
+class ElectricityOrb(pygame.sprite.Sprite):
 
     def __init__(self):
 
@@ -331,7 +339,20 @@ class ElectricityOrb(Player):
         self.moveTimer = self.moveFactor
 
     def update(self):
-        Player.update(self)
+        #Movement Update
+        self.moveUpdate()
+        # Gets mouse position
+        self.get_pos()
+        # Gets the old center point
+        self.centerpoint = self.rect.center
+        # Rotate sprite
+        #self.image = pygame.transform.rotate(self.imageMaster, self.angle)
+        # Get rectangle frame
+        self.rect = self.image.get_rect()
+        # Sets the new image to the old center point
+        # Makes sure the sprite does not go flying to oblivion
+        self.rect.center = self.centerpoint
+
         screen.blit(self.orb_image, (self.rect.x, self.rect.y))
 
 
@@ -374,12 +395,13 @@ class Laser(pygame.sprite.Sprite):
 
     def set_pos(self):
 
-        self.rect.x = player.rect.centerx
-        self.rect.y = player.rect.centery
+        self.rect.x = player.rect.center[0]
+        self.rect.y = player.rect.center[1]
 
     def debug(self):
 
-        print ("------DEBUG--------")
+        print ("------DEBUG-------- %s") #% (self.debugnumber)
+        #self.debugnumber += 1
         print (("\n Mouse angle\n\t" + str(self.mouse_angle) + "\n"))
         print (("self.c\n\t" + str(self.c)))
         print (" Current dx and dy values \n")
@@ -398,6 +420,7 @@ class Laser(pygame.sprite.Sprite):
         self.get_master()
         self.image = pygame.transform.rotate(self.masterimage, self.mouse_angle)
         self.rect = self.image.get_rect()
+        #self.rect = player.rect
         self.set_pos()
         self.debug()
 
@@ -434,6 +457,7 @@ bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
+yellowInBlackGuy = (241,203,121)
 
 # Screen
 screen = pygame.display.set_mode([width, height])
@@ -450,8 +474,8 @@ attack_sprites_list = pygame.sprite.Group()
 
 
 # Create object player
-playerWidth = 40
-playerHeight = 40
+playerWidth = 30
+playerHeight = 30
 player = Player(playerWidth, playerHeight)
 
 # Adds player to sprites list
