@@ -73,8 +73,8 @@ class maps:
 "w                                              w",
 "w                                              w",
 "w                                              w",
-"w                                              w",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+
             ]
         self.map2 = [
 
@@ -103,7 +103,6 @@ class maps:
 "w                        w                     w",
 "w                        w                     w",
 "wwwwwwwwwwwwwwww     wwwww         www         w",
-"w                                              w",
 "w                                              w",
 "w                                              w",
 "w                                              w",
@@ -140,8 +139,8 @@ class maps:
 "w                                              w",
 "w                                              w",
 "w                                              w",
-"w                                              w",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+
             ]
 
         self.map4 = [
@@ -174,8 +173,8 @@ class maps:
 "w                                              w",
 "w                                              w",
 "w                                              w",
-"w                                              w",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+
             ]
         self.map5 = [
             
@@ -207,8 +206,9 @@ class maps:
 "wwwwwwwwwwwwwwww       P        wwwwwwwwwwwwwwww",
 "wwwwwwwwwwwwwwww                wwwwwwwwwwwwwwww",
 "wwwwwwwwwwwwwwww                wwwwwwwwwwwwwwww",
-"wwwwwwwwwwwwwwww                wwwwwwwwwwwwwwww",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+
+
         ]
 
         self.map6 = [
@@ -241,6 +241,6 @@ class maps:
 "w                                              w",
 "w                                              w",
 "w                     P                        w",
-"w                                              w",
 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+
             ]
