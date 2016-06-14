@@ -750,8 +750,8 @@ playerWidth = 30
 playerHeight = 30
 #Move player Position###
 #Defines borders which player should not be able to pass
-self.playerWidthBorder = playerWidth / 2 + 5 + 30
-self.playerHeightBorder = playerHeight / 2 + 5 + 30
+playerWidthBorder = playerWidth / 2 + 5 + 30
+playerHeightBorder = playerHeight / 2 + 5 + 30
 player = Player(playerWidth, playerHeight)
 enemy = Enemy(1200,600)
 
