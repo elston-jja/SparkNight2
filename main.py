@@ -696,18 +696,18 @@ class Overlay(pygame.sprite.Sprite):
                     #    surf = pygame.transform.smoothscale(screen, (1440,870))
                     #    surf = pygame.transform.smoothscale(surf, scale_size)
                     #    self.image = surf
-                    
+
             self.pause_typetext = pygame.font.SysFont("Calibri",80)
             self.pause_text = self.pause_typetext.render(self.screen_text,True,bg)
-            
+
             #all_sprites_list.draw(screen)
             screen.blit(self.pause_text, (90,90))
             #self.image = self.blurSurf(screen,15)
             clock.tick(60)
             pygame.display.flip()
         #self.image = pygame.Surface([width, height])
-        
-        
+
+
 
     def blurSurf(self,surface, amt):
         """
@@ -843,6 +843,8 @@ background = pygame.transform.scale(background,(1440,900))
 pygame.mixer.music.play(-1, 0.0)
 # LOOP
 done = False
+
+#Hello elston
 
 while not done:
             # Quit pygame
