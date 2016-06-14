@@ -298,11 +298,12 @@ class Enemy(Player):
             self.collision = pygame.sprite.spritecollide(
                 self, wall_list, False
             )
+
             self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
             self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
             #If collision was at exit block, loads new map
 
-            if self.collision or self.enemey_collide:
+            if self.collision:# or self.enemey_collide:
                 if self.moveTimer % 2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
@@ -776,13 +777,13 @@ playerHeight = 30
 playerWidthBorder = playerWidth / 2 + 5 + 30
 playerHeightBorder = playerHeight / 2 + 5 + 30
 player = Player(playerWidth, playerHeight)
-enemy = Enemy(1200,600)
+#enemy = Enemy(1200,600)
 
 #Draws level
 draw_map = Level("map1")
 
 # Adds player to sprites list
-all_sprites_list.add(player,enemy)
+all_sprites_list.add(player)#,enemy)
 #all_sprites_list.add(all_sprites_list)
 all_sprites_list.add(overlay)
 wall_list.add(wall_list)
