@@ -614,7 +614,7 @@ class Level:
                 elif char == "P":
                     player.rect.x = x
                     player.rect.y = y
-                elif char == "R":
+                elif char == "E":
                     enemy = Enemy(x,y)
                     enemy_list.add(enemy)
                     all_sprites_list.add(enemy)
