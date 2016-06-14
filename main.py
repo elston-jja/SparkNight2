@@ -3,14 +3,10 @@
 Move Towards Mouse
 '''
 
-############################################################################
-
 import pygame
 from math import *
 from pygame.locals import *
 from map_list import maps
-
-############################################################################
 
 class Player(pygame.sprite.Sprite):
 
@@ -67,7 +63,7 @@ class Player(pygame.sprite.Sprite):
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
         self.obstacle = wall_list
-        
+
         #Adds pickachu image
         self.pickachu_Master = pygame.image.load("pickachu.png").convert()
         self.pickachu_Master = pygame.transform.rotate(self.pickachu_Master, 90)
@@ -97,7 +93,6 @@ class Player(pygame.sprite.Sprite):
 
         # Sets angle value in class
         self.angle = self.mouse_angle
-        # Makes sure the angle rotates properly
         if self.angle < 0:
             self.angle += 360
 
@@ -225,7 +220,7 @@ class Player(pygame.sprite.Sprite):
         Updates all of the movement attributes of the player
         each loop of the main loop
         '''
-        
+
         #Movement Update
         self.moveUpdate()
         # Gets mouse position
@@ -244,14 +239,16 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
 class Enemy(Player):
-    
+
     def __init__(self,spawnx,spawny):
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, 30, 30)
         self.rect.x = spawnx
         self.rect.y = spawny
         #self.image = ""
-    
+        self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
+        self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
+
     def move(self):
         '''
         Updates the velocities of the player after detecting a mouse click
@@ -284,12 +281,46 @@ class Enemy(Player):
         #update player pos before it reaches destination
         self.moveTimer = self.moveFactor
 
+    def moveUpdate(self):
+        '''
+        Changes the x and y position of the player
+        '''
+        #Checks to see if the move timer is over
+        if self.moveTimer > 0:
+            #lets the remainder update every 2 loops
+            if self.moveTimer % 2 == 0:
+                self.rect.x += self.remainderxvelocity
+                self.rect.y += self.remainderyvelocity
+            #Updates position eith velocity
+            self.rect.x += self.xvelocity
+            self.rect.y += self.yvelocity
+            #Checks to see if a collision occured after the move
+            self.collision = pygame.sprite.spritecollide(
+                self, wall_list, False
+            )
+            self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
+            self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
+            #If collision was at exit block, loads new map
+
+            if self.collision or self.enemey_collide:
+                if self.moveTimer % 2 == 0:
+                    self.rect.x -= self.remainderxvelocity
+                    self.rect.y -= self.remainderyvelocity
+                self.rect.x -= self.xvelocity
+                self.rect.y -= self.yvelocity
+                #and set velocity to opposite direction equal to 1
+                self.changeVelocityAfterCollision()
+
+            elif self.player_collide:
+                overlay.lives -= 1
+
+            self.moveTimer -= 1
+
     def update(self):
         self.move()
         Player.update(self)
 
-############################################################################
-    
+
 class ElectricityOrb(Player):
 
     def __init__(self):
@@ -492,7 +523,6 @@ class Laser(pygame.sprite.Sprite):
         #screen.blit(self.attack_image, (self.rect.x,self.rect.y))"""
 '''
 
-############################################################################
 
 class FieldofEffect(pygame.sprite.Sprite):
 
@@ -554,8 +584,6 @@ class FieldofEffect(pygame.sprite.Sprite):
     def update(self):
         self.draw()
 
-############################################################################
-        
 class Level:
 
     def __init__(self,level):
@@ -587,7 +615,7 @@ class Level:
                 if char == "e":
                     exit_ = Wall(x,y,red)
                     wall_list.add(exit_)
-                    exit_list.add(exit_)
+                    exit_doors_list.add(exit_)
                     all_sprites_list.add(exit_)
                 elif char == "y":
                     wall = Wall(x,y,yellow)
@@ -621,8 +649,6 @@ class Level:
             y+=30
             x = 0
 
-############################################################################
-
 class Wall(pygame.sprite.Sprite):
 
     def __init__(self,x,y,color):
@@ -652,8 +678,6 @@ class Wall(pygame.sprite.Sprite):
             screen.blit(self.block,(self.x,self.y))
         if self.color == red:
             screen.blit(self.block,(self.x,self.y))
-
-############################################################################
 
 class Overlay(pygame.sprite.Sprite):
 
@@ -685,9 +709,6 @@ class Overlay(pygame.sprite.Sprite):
         if self.lives == 0:
             pygame.quit()
 
-
-############################################################################
-
 def change_map(map_name):
     '''
     Builds new map when exit encountred, and creates new walls
@@ -697,39 +718,44 @@ def change_map(map_name):
     exit_list.empty()
     attack_sprites_list.empty()
 
+    #build.all_sprites_list.empty()
+    exit_doors_list.empty()
+    #build.wall_list.empty()
+
     Level(map_name)
 
     all_sprites_list.add(player, overlay, all_sprites_list)
+    #all_sprites_list.add(all_sprites_list)
     wall_list.add(wall_list)
+    exit_list.add(exit_doors_list)
 
 
-##############################################################################
 
-#  Main
-
-##############################################################################
-    
 pygame.init()
 
 # dimensions of screen
 width = 1440
-height = 870
+height = 900
 
 # COLORS
 bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
+#bg = (0,0,0)
 grey = (211,211,211)
 white = (255,255,255)
+#red = (220,100,100)
+#green = (0,255,0)
 blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
+yellowInBlackGuy = (241,203,121)
 
 
 # Screen
-screen = pygame.display.set_mode([width, height])
-pygame.display.set_caption("Sparknight 2: The Sparkening")
+screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
+pygame.display.set_caption("testing mouse and player")
 
 lives_left = 3
 
@@ -739,37 +765,49 @@ wall_list = pygame.sprite.Group()
 exit_list = pygame.sprite.Group()
 exit_doors_list = pygame.sprite.Group()
 attack_sprites_list = pygame.sprite.Group()
+player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 
-draw_map = Level("map1")
-
-
-#Move player Position###
-#Defines borders which player should not be able to pass
 playerWidth = 30
 playerHeight = 30
+#Move player Position###
+#Defines borders which player should not be able to pass
 playerWidthBorder = playerWidth / 2 + 5 + 30
 playerHeightBorder = playerHeight / 2 + 5 + 30
 player = Player(playerWidth, playerHeight)
+enemy = Enemy(1200,600)
 
-# Adds sprites to individual sprites list
-all_sprites_list.add(player,overlay)
+#Draws level
+draw_map = Level("map1")
+
+# Adds player to sprites list
+all_sprites_list.add(player,enemy)
+#all_sprites_list.add(all_sprites_list)
+all_sprites_list.add(overlay)
 wall_list.add(wall_list)
 exit_list.add(exit_doors_list)
+
+
 obstacles_for_attacks = wall_list
 
+
+#Music file for background Music
+pygame.mixer.music.load('MerryChristmasMr_Lawrence.mp3')
 # Game time for clock functions
 clock = pygame.time.Clock()
 
-# Display Background
+# Fill background (Makes cicle, when loop screen.fill is commented)
+#screen.fill(bg)
+
 background = pygame.image.load("background2.jpg").convert()
 background = pygame.transform.scale(background,(1440,900))
-
+pygame.mixer.music.play(-1, 0.0)
 # LOOP
 done = False
 
 while not done:
+            # Quit pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
@@ -787,22 +825,35 @@ while not done:
                 #    player.attack_R()
                 if event.key == pygame.K_w:
                     player.attack_W()
+                    #overlay.lives -= 1
                 if event.key == pygame.K_c:
                     done = True
+
+
+
+
+        # Makes sure that the player should not be moving
+        # And that the movement does not push them outside the border
+
 
         # fills background color
         screen.fill(bg)
         screen.blit(background,(0,0))
         # Call update function of sprites
         all_sprites_list.update()
+
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-        # Update the wall list
+
         wall_list.update()
+
         # Set tick rate to 60
         clock.tick(60)
+        #toggle_fullscreen()
         # Redraw screen
+
         pygame.display.flip()
 
 # Quit if loop is exited
+pygame.mixer.music.stop()
 pygame.quit()
