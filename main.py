@@ -63,7 +63,8 @@ class Player(pygame.sprite.Sprite):
         #Boolean value that determines if a wall was hit
         self.collision = pygame.sprite.spritecollide(self, wall_list, False)
         self.obstacle = wall_list
-
+        
+        #Adds pickachu image
         self.pickachu_Master = pygame.image.load("pickachu.png").convert()
         self.pickachu_Master = pygame.transform.rotate(self.pickachu_Master, 90)
         self.pickachu_Master = pygame.transform.scale(self.pickachu_Master, (35,35))
@@ -79,8 +80,8 @@ class Player(pygame.sprite.Sprite):
         self.pos = pygame.mouse.get_pos()
 
         # Get change in X and y dy/dy
-        self.dy = self.pos[1] - self.rect.y - 20
-        self.dx = self.pos[0] - self.rect.x - 20
+        self.dy = self.pos[1] - self.rect.centery
+        self.dx = self.pos[0] - self.rect.centerx
 
         # Get angle from mouse and player
         self.mouse_angle = atan2(- self.dy, self.dx)
@@ -237,17 +238,51 @@ class Player(pygame.sprite.Sprite):
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
 class Enemy(Player):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.width = 30
-        self.height = 30
-        self.image = pygame.Surface([self.width,self.height])
-        self.rect = self.image.get_rect()
-        self.rect.x = 180
-        self.rect.y = 180
-        self.timer = 120
     
+    def __init__(self,spawnx,spawny):
+        pygame.sprite.Sprite.__init__(self)
+        Player.__init__(self, 30, 30)
+        self.rect.x = spawnx
+        self.rect.y = spawny
+        self.image = ""
+    
+    def move(self):
+        '''
+        Updates the velocities of the player after detecting a mouse click
+        '''
+        #determines how many increment to move the object by, say the
+        #difference in x was 80, this would divide that by say 40 and get 2,
+        # so each update would add 2 to posx
+        self.collision = pygame.sprite.spritecollide(self, self.obstacle, False)
+
+        #Gets position of mouse and finds difference in x and y cords of
+        #both points
+        self.mouseMovePos = pygame.mouse.get_pos()
+        self.movedx = player.rect.centerx - self.rect.center[0]
+        self.movedy = player.rect.centery - self.rect.center[1]
+
+        #Divides difference of points by factor that determines how fast the
+        #character moves
+        self.xvelocity = self.movedx / self.moveFactor
+        self.yvelocity = self.movedy / self.moveFactor
+
+        #Since pygame is not perfect, when dividing, there are remainders
+        #that are left, and these values store them so they can be
+        # added in between big velocity movements
+        self.remainderxvelocity = (self.movedx % self.moveFactor) /\
+        (self.moveFactor / self.remainderMoveTimer)
+        self.remainderyvelocity = (self.movedy % self.moveFactor) /\
+         (self.moveFactor / self.remainderMoveTimer)
+
+        #this variable basically tells the main loop, how many times to
+        #update player pos before it reaches destination
+        self.moveTimer = self.moveFactor
+
     def update(self):
+        self.move()
+        Player.update(self)
+    
+    """def update(self):
         self.dpx = (player.rect.x - self.rect.centerx)
         self.dpy = (player.rect.y - self.rect.centery)
         if self.timer > 0:
@@ -260,7 +295,7 @@ class Enemy(Player):
                 self.rect.x += (self.dpy/100)*2
                 self.rect.y += (self.dpy/100)*2
             #self.rect.x += (self.remainderx)
-            #self.rect.y += (self.remaindery)
+            #self.rect.y += (self.remaindery)"""
         
 
 class ElectricityOrb(Player):
@@ -709,7 +744,7 @@ draw_map = Level("map1")
 playerWidth = 30
 playerHeight = 30
 player = Player(playerWidth, playerHeight)
-enemy = Enemy()
+enemy = Enemy(1200,600)
 
 
 # Adds player to sprites list
