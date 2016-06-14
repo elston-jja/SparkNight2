@@ -670,6 +670,37 @@ class Overlay(pygame.sprite.Sprite):
         if self.lives == 0:
             restart()
 
+    def main_menu(self):
+        self.image = self.blurSurf(self.image,16)
+        inMenu = True
+        while inMenu:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        #self.image = pygame.Surface([self.width, self.height])
+                        inMenu = False
+                        #del self.image
+            #self.image = self.blurSurf(screen,15)
+            #all_sprites_list.draw(screen)
+            clock.tick(60)
+            pygame.display.flip()
+            
+        
+
+    def blurSurf(self,surface, amt):
+        """
+        Blur the given surface by the given 'amount'.  Only values 1 and greater
+        are valid.  Value 1 = no blur.
+        """
+        if amt < 1.0:
+            raise ValueError("Arg 'amt' must be greater than 1.0, passed in value is %s"%amt)
+        scale = 1.0/float(amt)
+        surf_size = surface.get_size()
+        scale_size = (int(surf_size[0]*scale), int(surf_size[1]*scale))
+        surf = pygame.transform.smoothscale(surface, scale_size)
+        surf = pygame.transform.smoothscale(surf, surf_size)
+        return surf
+
 def change_map(map_name):
     '''
     Builds new map when exit encountred, and creates new walls
@@ -739,9 +770,7 @@ draw_map = Level("map1")
 
 all_sprites_list.add(player)
 player_list.add(player)
-
 all_sprites_list.add(overlay)
-
 wall_list.add(wall_list)
 
 
@@ -811,13 +840,12 @@ while not done:
                     player.attack_Q()
                 #if event.key == pygame.K_r:
                 #    player.attack_R()
-                if event.key == pygame.K_w:
+                elif event.key == pygame.K_w:
                     player.attack_W()
-                    #overlay.lives -= 1
-                if event.key == pygame.K_c:
+                elif event.key == pygame.K_c:
                     done = True
-
-
+                elif event.key == pygame.K_ESCAPE:
+                    overlay.main_menu()
 
 
         # Makes sure that the player should not be moving
