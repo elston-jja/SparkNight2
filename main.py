@@ -236,6 +236,32 @@ class Player(pygame.sprite.Sprite):
 
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
+class Enemy(Player):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.width = 30
+        self.height = 30
+        self.image = pygame.Surface([self.width,self.height])
+        self.rect = self.image.get_rect()
+        self.rect.x = 180
+        self.rect.y = 180
+        self.timer = 120
+    
+    def update(self):
+        self.dpx = (player.rect.x - self.rect.centerx)
+        self.dpy = (player.rect.y - self.rect.centery)
+        if self.timer > 0:
+            self.remainderx = self.dpx % 100
+            self.remaindery = self.dpy % 100
+            #for i in range (100):
+            self.rect.x += self.dpx/10
+            self.rect.y += self.dpy/10
+            if self.dpx % 2 == 0:
+                self.rect.x += (self.dpy/100)*2
+                self.rect.y += (self.dpy/100)*2
+            #self.rect.x += (self.remainderx)
+            #self.rect.y += (self.remaindery)
+        
 
 class ElectricityOrb(Player):
 
@@ -683,9 +709,11 @@ draw_map = Level("map1")
 playerWidth = 30
 playerHeight = 30
 player = Player(playerWidth, playerHeight)
+enemy = Enemy()
+
 
 # Adds player to sprites list
-all_sprites_list.add(player)
+all_sprites_list.add(player,enemy)
 #all_sprites_list.add(all_sprites_list)
 all_sprites_list.add(overlay)
 wall_list.add(wall_list)
