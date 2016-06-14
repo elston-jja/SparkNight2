@@ -648,9 +648,7 @@ class Overlay(pygame.sprite.Sprite):
         pygame.font.init()
         self.font = pygame.font.SysFont("Calibri",20)
         self.live_text = self.font.render("Lives: ",True,bg)
-        self.width = 40
-        self.height = 80
-        self.image = pygame.Surface([self.width, self.height])
+        self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
         self.hearts = pygame.image.load("heart.png").convert_alpha()
@@ -671,20 +669,33 @@ class Overlay(pygame.sprite.Sprite):
             restart()
 
     def main_menu(self):
-        self.image = self.blurSurf(self.image,16)
+        #self.image = self.blurSurf(self.image,16)
+        #self.image = pygame.Surface([width, height])
+        self.screen_text = "Press ESC to resume"
         inMenu = True
         while inMenu:
             for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
+                if event.type == pygame.QUIT:
+                    global done
+                    done = True
+                    inMenu = False
+                elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        #self.image = pygame.Surface([self.width, self.height])
                         inMenu = False
-                        #del self.image
-            #self.image = self.blurSurf(screen,15)
+                    #    surf = pygame.transform.smoothscale(screen, (1440,870))
+                    #    surf = pygame.transform.smoothscale(surf, scale_size)
+                    #    self.image = surf
+                    
+            self.pause_typetext = pygame.font.SysFont("Calibri",80)
+            self.pause_text = self.pause_typetext.render(self.screen_text,True,bg)
+            
             #all_sprites_list.draw(screen)
+            screen.blit(self.pause_text, (90,90))
+            #self.image = self.blurSurf(screen,15)
             clock.tick(60)
             pygame.display.flip()
-            
+        #self.image = pygame.Surface([width, height])
+        
         
 
     def blurSurf(self,surface, amt):
@@ -692,8 +703,6 @@ class Overlay(pygame.sprite.Sprite):
         Blur the given surface by the given 'amount'.  Only values 1 and greater
         are valid.  Value 1 = no blur.
         """
-        if amt < 1.0:
-            raise ValueError("Arg 'amt' must be greater than 1.0, passed in value is %s"%amt)
         scale = 1.0/float(amt)
         surf_size = surface.get_size()
         scale_size = (int(surf_size[0]*scale), int(surf_size[1]*scale))
@@ -751,6 +760,7 @@ attack_sprites_list = pygame.sprite.Group()
 player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
+blur_group = pygame.sprite.Group()
 
 
 
@@ -772,6 +782,7 @@ all_sprites_list.add(player)
 player_list.add(player)
 all_sprites_list.add(overlay)
 wall_list.add(wall_list)
+blur_group.add(overlay)
 
 
 obstacles_for_attacks = wall_list
@@ -804,7 +815,6 @@ def restart():
     all_sprites_list.add(overlay)
 
     wall_list.add(wall_list)
-
 
     obstacles_for_attacks = wall_list
 
