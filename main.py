@@ -220,6 +220,7 @@ class Player(pygame.sprite.Sprite):
         Updates all of the movement attributes of the player
         each loop of the main loop
         '''
+        
         #Movement Update
         self.moveUpdate()
         # Gets mouse position
@@ -613,6 +614,10 @@ class Level:
                 elif char == "P":
                     player.rect.x = x
                     player.rect.y = y
+                elif char == "R":
+                    enemy = Enemy(x,y)
+                    enemy_list.add(enemy)
+                    all_sprites_list.add(enemy)
                     # When drawing each block
                     # (Character in row)
                     # Move 30px to the right
@@ -743,6 +748,10 @@ draw_map = Level("map1")
 
 playerWidth = 30
 playerHeight = 30
+#Move player Position###
+#Defines borders which player should not be able to pass
+self.playerWidthBorder = playerWidth / 2 + 5 + 30
+self.playerHeightBorder = playerHeight / 2 + 5 + 30
 player = Player(playerWidth, playerHeight)
 enemy = Enemy(1200,600)
 
@@ -793,10 +802,7 @@ while not done:
                     done = True
 
 
-        #Move player Position###
-        #Defines borders which player should not be able to pass
-        playerWidthBorder = playerWidth / 2 + 5 + 30
-        playerHeightBorder = playerHeight / 2 + 5 + 30
+        
 
         # Makes sure that the player should not be moving
         # And that the movement does not push them outside the border
