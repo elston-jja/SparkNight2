@@ -238,7 +238,6 @@ class Player(pygame.sprite.Sprite):
 
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
 
-############################################################################
 
 class Enemy(Player):
 
@@ -300,12 +299,14 @@ class Enemy(Player):
             self.collision = pygame.sprite.spritecollide(
                 self, wall_list, False
             )
-
+            enemy_list.remove(self)
             self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
+
             self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
+            #print self.player_collide
             #If collision was at exit block, loads new map
 
-            if self.collision:# or self.enemey_collide:
+            if self.collision or self.enemey_collide:
                 if self.moveTimer % 2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
@@ -314,8 +315,12 @@ class Enemy(Player):
                 #and set velocity to opposite direction equal to 1
                 self.changeVelocityAfterCollision()
 
-            elif self.player_collide:
+            if self.player_collide:
+                #print 'What up my boi'
                 overlay.lives -= 1
+                all_sprites_list.remove(self)
+            else:
+                enemy_list.add(self)
 
             self.moveTimer -= 1
 
@@ -663,7 +668,7 @@ class Overlay(pygame.sprite.Sprite):
         if self.lives == 1:
             screen.blit(self.hearts,(40, 60))
         if self.lives == 0:
-            pygame.quit()
+            restart()
 
 def change_map(map_name):
     '''
@@ -677,8 +682,6 @@ def change_map(map_name):
     Level(map_name)
     all_sprites_list.add(player, overlay, all_sprites_list)
     wall_list.add(wall_list)
-
-
 
 pygame.init()
 
@@ -718,6 +721,8 @@ player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 
+
+
 playerWidth = 30
 playerHeight = 30
 #Move player Position###
@@ -733,6 +738,7 @@ draw_map = Level("map1")
 # Adds player to sprites list
 
 all_sprites_list.add(player)
+player_list.add(player)
 
 all_sprites_list.add(overlay)
 
@@ -740,6 +746,38 @@ wall_list.add(wall_list)
 
 
 obstacles_for_attacks = wall_list
+
+
+def restart():
+    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
+    lives_left = 3
+    # Create sprite group
+    all_sprites_list = pygame.sprite.Group()
+    wall_list = pygame.sprite.Group()
+    exit_list = pygame.sprite.Group()
+    exit_doors_list = pygame.sprite.Group()
+    attack_sprites_list = pygame.sprite.Group()
+    player_list = pygame.sprite.Group()
+    overlay = Overlay()
+    enemy_list = pygame.sprite.Group()
+
+    player = Player(playerWidth, playerHeight)
+    #enemy = Enemy(1200,600)
+
+    #Draws level
+    draw_map = Level("map1")
+
+    # Adds player to sprites list
+
+    all_sprites_list.add(player)
+    player_list.add(player)
+
+    all_sprites_list.add(overlay)
+
+    wall_list.add(wall_list)
+
+
+    obstacles_for_attacks = wall_list
 
 
 #Music file for background Music
