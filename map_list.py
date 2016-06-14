@@ -62,7 +62,7 @@ class maps:
 "w              wwwwwwwwwwwwwwwwww              w",
 "w                      ww                      w",
 "w                      ww                      w",
-"w                      ww                      w",
+"w                      ww                E     w",
 "w                      ww                      w",
 "w                      ww                      w",
 "w                      ww                      w",

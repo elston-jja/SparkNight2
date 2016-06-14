@@ -623,7 +623,7 @@ class Level:
                     # Move 30px to the right
                 x+= 30
                 # When moving down to next row change the Y by 30
-                # Reset the X
+                # Reset th X
             y+=30
             x = 0
 
