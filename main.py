@@ -246,9 +246,11 @@ class Enemy(Player):
         Player.__init__(self, 30, 30)
         self.rect.x = spawnx
         self.rect.y = spawny
+        self.health = 3
         #self.image = ""
         self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
         self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
+        self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
 
     def move(self):
         '''
@@ -301,7 +303,7 @@ class Enemy(Player):
             )
             enemy_list.remove(self)
             self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
-
+            self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, True)
             self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
             #print self.player_collide
             #If collision was at exit block, loads new map
@@ -315,6 +317,9 @@ class Enemy(Player):
                 #and set velocity to opposite direction equal to 1
                 self.changeVelocityAfterCollision()
 
+            if self.attack_collide:
+                self.health -= 1
+
             if self.player_collide:
                 #print 'What up my boi'
                 overlay.lives -= 1
@@ -326,6 +331,10 @@ class Enemy(Player):
 
     def update(self):
         self.move()
+
+        if self.health <= 0:
+            all_sprites_list.remove(self)
+
         Player.update(self)
 
 
@@ -494,7 +503,9 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.height = 2
         self.width = 2
         self.field_level = 2
-
+        self.image = pygame.Surface([self.width,self.height])
+        self.rect = self.image.get_rect()
+        self.image.set_colorkey(bg)
         # Number of times to loop animation
         self.loop_animation = 3
 
