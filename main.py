@@ -21,7 +21,7 @@ class Player(pygame.sprite.Sprite):
         self.width = PlayerWidth
         self.height = PlayerHeight
         # Creates images (CREATE TWO, one for reference later)
-        self.imageMaster = pygame.Surface([self.width, self.height])
+        self.imageMaster = pygame.Surface([self.width, self.height], pygame.FULLSCREEN)
         self.image = self.imageMaster
         # Fills the image with white
         self.image.fill(white)
@@ -237,6 +237,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = self.centerpoint
 
         screen.blit(self.pickachu, (self.rect.x, self.rect.y))
+
+############################################################################
 
 class Enemy(Player):
 
@@ -476,53 +478,6 @@ class ElectricityOrb(Player):
 
         screen.blit(self.orbDrawImage, (self.rect.x, self.rect.y))
 
-'''
-class Laser(pygame.sprite.Sprite):
-
-    def __init__(self):
-
-        pygame.sprite.Sprite.__init__(self)
-
-        self.image = pygame.Surface([player.width,player.height])
-
-        self.image.fill(white)
-
-        self.rect = self.image.get_rect()
-
-        self.attack_image = pygame.image.load("bolt.png").convert()
-
-    def get_pos(self):
-
-        # Gets Mouse X and Y cords
-        self.mousex = pygame.mouse.get_pos()[0]
-        self.mousey = pygame.mouse.get_pos()[1]
-        # Gets player cords X and Y
-        self.currentx = player.rect.centerx
-        self.currenty = player.rect.centery
-        # Gets the  difference in X and Y
-        self.dx = (self.mousex - self.currentx)
-        self.dy = (self.mousey - self.currenty)
-        # Get angle towards mouse from object
-        self.mouse_angle = degrees(atan2(-(self.dy), self.dx))
-        if self.mouse_angle < 0:
-            self.mouse_angle += 360
-        # Gets Hypotenuse
-        self.c = (self.dy ** 2 + self.dx ** 2) ** (1 / 2.0)
-
-    def draw_rect_towards_mouse(self):
-        self.amount_of_rect = int(self.c / 30)
-        if self.amount_of_rect > 0:
-            for i in range(self.amount_of_rect):
-                screen.blit(self.attack_image, (self.rect.x,self.rect.y))#                 self.rect.x += abs(self.dx)
-                self.rect.y += abs(self.dy)
-
-    def update(self):
-        self.get_pos()
-        self.draw_rect_towards_mouse()
-
-    #def draw(self):
-        #screen.blit(self.attack_image, (self.rect.x,self.rect.y))"""
-'''
 
 
 class FieldofEffect(pygame.sprite.Sprite):
@@ -616,7 +571,7 @@ class Level:
                 if char == "e":
                     exit_ = Wall(x,y,red)
                     wall_list.add(exit_)
-                    exit_doors_list.add(exit_)
+                    exit_list.add(exit_)
                     all_sprites_list.add(exit_)
                 elif char == "y":
                     wall = Wall(x,y,yellow)
@@ -718,17 +673,10 @@ def change_map(map_name):
     wall_list.empty()
     exit_list.empty()
     attack_sprites_list.empty()
-
-    #build.all_sprites_list.empty()
     exit_doors_list.empty()
-    #build.wall_list.empty()
-
     Level(map_name)
-
     all_sprites_list.add(player, overlay, all_sprites_list)
-    #all_sprites_list.add(all_sprites_list)
     wall_list.add(wall_list)
-    exit_list.add(exit_doors_list)
 
 
 
@@ -736,7 +684,7 @@ pygame.init()
 
 # dimensions of screen
 width = 1440
-height = 900
+height = 870
 
 # COLORS
 bg = (0, 0, 0)
@@ -756,7 +704,7 @@ yellowInBlackGuy = (241,203,121)
 
 # Screen
 screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
-pygame.display.set_caption("testing mouse and player")
+pygame.display.set_caption("Sparknight 2: The Sparkening")
 
 lives_left = 3
 
@@ -783,11 +731,12 @@ player = Player(playerWidth, playerHeight)
 draw_map = Level("map1")
 
 # Adds player to sprites list
-all_sprites_list.add(player)#,enemy)
-#all_sprites_list.add(all_sprites_list)
+
+all_sprites_list.add(player)
+
 all_sprites_list.add(overlay)
+
 wall_list.add(wall_list)
-exit_list.add(exit_doors_list)
 
 
 obstacles_for_attacks = wall_list
