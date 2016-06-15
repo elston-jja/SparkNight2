@@ -5,8 +5,8 @@ Move Towards Mouse
 
 import pygame
 from math import *
-from pygame.locals import *
 from map_list import maps
+global done
 
 class Player(pygame.sprite.Sprite):
 
@@ -717,17 +717,22 @@ class Overlay(pygame.sprite.Sprite):
         '''
         Creates a menu loop inside game, and helps to keep events
         '''
+        # Text to display
         self.screen_text = ("Press ESC to resume")
         self.music_toggle = ('Press "u" to toggle music')
         self.mouse_toggle = ('Press "y" to toggle mouse action flip')
-
+        self.fullscreen_toggle = ('Press "i" to toggle fullscreen')
+        self.quitswitch = ('Press "c" to quit ')
+        # render all the types of text | has AA and color: black
         self.pause_render = self.pause_type.render(self.screen_text,True,bg)
         self.options_render = self.options_type.render(self.music_toggle, True, bg)
         self.mouse_render = self.options_type.render(self.mouse_toggle,True,bg)
-
+        self.fullscreen_render = self.options_type.render(self.fullscreen_toggle,True,bg)
+        self.quitswitch_render = self.options_type.render(self.quitswitch,True,bg)
         # Take new image when paused and load to be used
         pygame.image.save(screen,"current_bg.jpg")
         frame = pygame.image.load("current_bg.jpg")
+        # Run nested loop for menu events
         inMenu = True
         while inMenu:
             for event in pygame.event.get():
@@ -736,27 +741,43 @@ class Overlay(pygame.sprite.Sprite):
                     done = True
                     inMenu = False
                 elif event.type == pygame.KEYDOWN:
+                    # Unpause
                     if event.key == pygame.K_ESCAPE:
                         inMenu = False
+                    # Toggle music
                     elif event.key == pygame.K_u:
-                        if not self.isPaused:
+                        self.isPaused = not self.isPaused
+                        if isPaused:
                             pygame.mixer.music.pause()
-                            self.isPaused = True
                         else:
                             pygame.mixer.music.unpause()
                             self.isPaused = False
+                    # Toggle mouse flip from 2 to 0
                     elif event.key == pygame.K_y:
                         self.mouseflip = not self.mouseflip
+                    # Toggle fullscreen
+                    elif event.key == pygame.K_i:
+                        flags=screen.get_flags()
+                        if screen.get_flags() & FULLSCREEN:
+                            pygame.display.set_mode([1440,870], pygame.RESIZABLE)
+                        else:
+                            pygame.display.set_mode([1440,870], pygame.FULLSCREEN)
+                    elif event.key == pygame.K_c:
+                        inMenu = False
+                        done = True
 
             self.pause_type = pygame.font.SysFont("Calibri",80)
             self.pause_render = self.pause_type.render(self.screen_text,True,bg)
             self.options_type = pygame.font.SysFont("Calibri", 50)
             self.options_render = self.options_type.render(self.music_toggle, True, bg)
+            # Draw blurred background and font on top
 
             screen.blit(self.blurSurf(frame,15),(0,0))
             screen.blit(self.pause_render, (450,90))
             screen.blit(self.options_render, (530, 300))
             screen.blit(self.mouse_render, (450, 400))
+            screen.blit(self.fullscreen_render,(500,500))
+            screen.blit(self.quitswitch_render,(590,600))
             clock.tick(60)
             pygame.display.flip()
 
@@ -798,7 +819,7 @@ def change_map(map_name):
     all_sprites_list.add(player, overlay, all_sprites_list)
     wall_list.add(wall_list)
 
-
+# HARD RESET, worst way to reset.
 def restart():
     global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
     lives_left = 3
