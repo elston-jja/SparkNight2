@@ -671,6 +671,7 @@ class Overlay(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         # Declare base amount of lives
+        self.mouseflip = False
         self.lives = 3
         # Initialize fonts
         pygame.font.init()
@@ -713,9 +714,11 @@ class Overlay(pygame.sprite.Sprite):
         '''
         self.screen_text = ("Press ESC to resume")
         self.music_toggle = ('Press "u" to toggle music')
+        self.mouse_toggle = ('Press "y" to toggle mouse action flip')
         
         self.pause_render = self.pause_type.render(self.screen_text,True,bg)
         self.options_render = self.options_type.render(self.music_toggle, True, bg)
+        self.mouse_render = self.options_type.render(self.mouse_toggle,True,bg)
 
         # Take new image when paused and load to be used
         pygame.image.save(screen,"current_bg.jpg")
@@ -737,15 +740,31 @@ class Overlay(pygame.sprite.Sprite):
                         else:
                             pygame.mixer.music.unpause()
                             self.isPaused = False
+                    elif event.key == pygame.K_y:
+                        self.mouseflip = not self.mouseflip
                         
             
             # Draw blurred background and font on top
             screen.blit(self.blurSurf(frame,15),(0,0))
             screen.blit(self.pause_render, (450,90))
             screen.blit(self.options_render, (530, 300))
+            screen.blit(self.mouse_render, (450, 400))
             clock.tick(60)
             pygame.display.flip()
 
+    # def intro_screen(self):
+    #     intro_graphic = False
+    #     intro = True
+    #     while intro :
+    #         for event.type == pygame.KEYDOWN:
+    #             if event.key == pygame.K_RETURN:
+    #                 pass
+    #             if event.key == pygame.K_ESC:
+    #                 pass
+    #             if event.key == pygame.QUIT:
+    #                 pygame.quit()
+
+        
     def blurSurf(self,surface, amount):
         """
         Method used for blurring the background (Source used: 1)
@@ -781,15 +800,12 @@ bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
-#bg = (0,0,0)
 grey = (211,211,211)
 white = (255,255,255)
-#red = (220,100,100)
-#green = (0,255,0)
 blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
-yellowInBlackGuy = (241,203,121)
+
 
 
 # Screen
@@ -874,9 +890,6 @@ pygame.mixer.music.play(-1, 1.0)
 # LOOP
 done = False
 
-#Hello elston
-#Hi lance     
-
 while not done:
             # Quit pygame
         for event in pygame.event.get():
@@ -885,8 +898,12 @@ while not done:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 button_pressed = pygame.mouse.get_pressed()
             elif event.type == pygame.MOUSEBUTTONUP:
-                if button_pressed[2]:
-                    player.move()
+                if overlay.mouseflip:
+                    if button_pressed[0]:
+                        player.move()
+                elif not overlay.mouseflip:
+                    if button_pressed[2]:
+                        player.move()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
