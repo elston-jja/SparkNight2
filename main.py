@@ -61,15 +61,15 @@ class Player(pygame.sprite.Sprite):
         self.moveFactor = 40
         self.map_number = 0
         #Boolean value that determines if a wall was hit
-        self.collision = pygame.sprite.spritecollide(self, wall_list, False)
+        self.wallCollision = pygame.sprite.spritecollide(self, wall_list, False)
         self.obstacle = wall_list
 
         #Adds pickachu image
-        self.pickachu_Master = pygame.image.load("pickachu.png").convert()
-        self.pickachu_Master = pygame.transform.rotate(self.pickachu_Master, 90)
-        self.pickachu_Master = pygame.transform.scale(self.pickachu_Master, (35,35))
-        self.pickachu = self.pickachu_Master
-        self.pickachu.set_colorkey(white)
+        self.imageMasterSprite = pygame.image.load("pickachu.png").convert()
+        self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 90)
+        self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (35,35))
+        self.imageSprite = self.imageMasterSprite
+        self.imageSprite.set_colorkey(white)
 
     def get_pos(self):
         '''
@@ -103,7 +103,7 @@ class Player(pygame.sprite.Sprite):
         #determines how many increment to move the object by, say the
         #difference in x was 80, this would divide that by say 40 and get 2,
         # so each update would add 2 to posx
-        self.collision = pygame.sprite.spritecollide(self, self.obstacle, False)
+        self.wallCollision = pygame.sprite.spritecollide(self, self.obstacle, False)
 
         #Gets position of mouse and finds difference in x and y cords of
         #both points
@@ -172,7 +172,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
             #Checks to see if a collision occured after the move
-            self.collision = pygame.sprite.spritecollide(
+            self.wallCollision = pygame.sprite.spritecollide(
                 self, wall_list, False
             )
             self.exit_level = pygame.sprite.spritecollide(
@@ -184,7 +184,7 @@ class Player(pygame.sprite.Sprite):
                 self.map_number = self.map_number
                 change_map("map" + str(self.map_number))
             #if not exit block, but normal wall cancel last movement
-            elif self.collision:
+            elif self.wallCollision:
                 if self.moveTimer % 2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
@@ -203,14 +203,11 @@ class Player(pygame.sprite.Sprite):
         orb = ElectricityOrb()
         attack_sprites_list.add(orb)
         all_sprites_list.add(orb)
-        #print 'it worked in the function?'
-
-    #def attack_R(self):
-#        laser = Laser()
-#        attack_sprites_list.add(laser)
-#        all_sprites_list.add(laser)
 
     def attack_W(self):
+        '''
+        Calls the field of effect attack based on the loation of the player
+        '''
         area_of_effect = FieldofEffect()
         attack_sprites_list.add(area_of_effect)
         all_sprites_list.add(area_of_effect)
@@ -229,14 +226,14 @@ class Player(pygame.sprite.Sprite):
         self.centerpoint = self.rect.center
         # Rotate sprite
         self.image = pygame.transform.rotate(self.imageMaster, self.angle)
-        self.pickachu = pygame.transform.rotate(self.pickachu_Master, self.angle)
+        self.imageSprite = pygame.transform.rotate(self.imageMasterSprite, self.angle)
         # Get rectangle frame
         self.rect = self.image.get_rect()
         # Sets the new image to the old center point
         # Makes sure the sprite does not go flying to oblivion
         self.rect.center = self.centerpoint
 
-        screen.blit(self.pickachu, (self.rect.x, self.rect.y))
+        screen.blit(self.imageSprite, (self.rect.x, self.rect.y))
 
 
 class Enemy(Player):
@@ -251,6 +248,10 @@ class Enemy(Player):
         self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
         self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
         self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
+        self.imageMasterSprite = pygame.image.load("Wizard_Male.png").convert()
+        self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (30,30))
+        self.imageSprite = self.imageMasterSprite
+        self.imageSprite.set_colorkey(white)
 
     def move(self):
         '''
@@ -259,7 +260,7 @@ class Enemy(Player):
         #determines how many increment to move the object by, say the
         #difference in x was 80, this would divide that by say 40 and get 2,
         # so each update would add 2 to posx
-        self.collision = pygame.sprite.spritecollide(self, self.obstacle, False)
+        self.wallCollision = pygame.sprite.spritecollide(self, self.obstacle, False)
 
         #Gets position of mouse and finds difference in x and y cords of
         #both points
@@ -298,7 +299,7 @@ class Enemy(Player):
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
             #Checks to see if a collision occured after the move
-            self.collision = pygame.sprite.spritecollide(
+            self.wallCollision = pygame.sprite.spritecollide(
                 self, wall_list, False
             )
             enemy_list.remove(self)
@@ -308,7 +309,7 @@ class Enemy(Player):
             #print self.player_collide
             #If collision was at exit block, loads new map
 
-            if self.collision or self.enemey_collide:
+            if self.wallCollision or self.enemey_collide:
                 if self.moveTimer % 2 == 0:
                     self.rect.x -= self.remainderxvelocity
                     self.rect.y -= self.remainderyvelocity
@@ -389,7 +390,7 @@ class ElectricityOrb(Player):
         # the moveTimr can do
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
-        self.collision = pygame.sprite.spritecollide(self, wall_list, False)
+        self.wallCollision = pygame.sprite.spritecollide(self, wall_list, False)
         self.orb_image = pygame.image.load("better_orb.png").convert()
         self.orbExplision_image = pygame.image.load("orb_explosion_large.png").convert()
         self.orb_image.set_colorkey(bg)
@@ -415,18 +416,18 @@ class ElectricityOrb(Player):
             self.rect.x += self.xvelocity
             self.rect.y += self.yvelocity
             #Checks to see if a collision occured after the move
-            if self.collision and self.moveTimer == 14:
+            if self.wallCollision and self.moveTimer == 14:
                 isDoubleCollision = True
             else:
                 isDoubleCollision = False
-            self.collision = pygame.sprite.spritecollide(self,wall_list,False)
+            self.wallCollision = pygame.sprite.spritecollide(self,wall_list,False)
             self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-            self.collisionTrace = None
+            self.wallCollisionTrace = None
             #self.enemy_collision = pygame.sprite.spritecollide(self,enemy_list,False)
             #If collision was at exit block, loads new map
 
 
-            if (self.exit_level or self.collision and not isDoubleCollision): #or self.enemy_collision:
+            if (self.exit_level or self.wallCollision and not isDoubleCollision): #or self.enemy_collision:
                 self.moveTimer = 15
                 self.exploded = True
                 #print "it's colliding"
@@ -493,7 +494,6 @@ class ElectricityOrb(Player):
         screen.blit(self.orbDrawImage, (self.rect.x, self.rect.y))
 
 
-
 class FieldofEffect(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -510,6 +510,9 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.loop_animation = 1
 
     def draw(self):
+        '''
+        Draw radiating circles as attack for player
+        '''
         # Increase Field level
         self.field_level += 2
 
@@ -547,8 +550,10 @@ class FieldofEffect(pygame.sprite.Sprite):
             all_sprites_list.remove(self)
 
     def check_collisions(self):
+        '''
+        Removes the attack, when a new level has been loaded
+        '''
         self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-        #If collision was at exit block, loads new map
         if self.exit_level:
             all_sprites_list.remove(self)
             attack_sprites_list.remove(self)
@@ -556,8 +561,11 @@ class FieldofEffect(pygame.sprite.Sprite):
     def update(self):
         self.draw()
 
-class Level:
 
+class Level:
+    '''
+    Checks the level and display it accoringly
+    '''
     def __init__(self,level):
         # State the initial level number
         # Value not needed except for verbosity
@@ -627,23 +635,34 @@ class Wall(pygame.sprite.Sprite):
 
         # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
+        # Create the width and height of surface
         self.image = pygame.Surface([30,30])
         self.rect = self.image.get_rect()
         self.color = color
+        # Set the colors
         self.image.fill(color)
-        if self.color == grey:
-            self.image.set_colorkey(color)
-            self.block = pygame.image.load("wall.png").convert()
-            self.block = pygame.transform.scale(self.block,(30,30))
-        elif self.color == red:
-            self.image.set_colorkey(color)
-            self.block = pygame.image.load("exit.png").convert_alpha()
-            self.block = pygame.transform.scale(self.block,(30,30))
+        self.image.set_colorkey(color)
+        # Check to see what color and draw
+        # an image accordingly
+        self.checkBlockSprite()
+        # Set the image to be drawn at given x and y cords
         self.x = x
         self.y = y
         self.rect.x = x
         self.rect.y = y
-        #screen.blit(self.block,(90,90))
+
+    def checkBlockSprite(self):
+        '''
+        Checks to see what was the color code of the block
+        this enables the program to know what type of block to draw
+        using different color codes
+        '''
+        if self.color == grey:
+            self.block = pygame.image.load("wall.png").convert()
+            self.block = pygame.transform.scale(self.block,(30,30))
+        elif self.color == red:
+            self.block = pygame.image.load("exit.png").convert_alpha()
+            self.block = pygame.transform.scale(self.block,(30,30))
 
     def update(self):
         if self.color == grey:
@@ -655,18 +674,31 @@ class Overlay(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        # Declare base amount of lives
+        self.mouseflip = False
         self.lives = 3
+        # Initialize fonts
         pygame.font.init()
+        # Create fontattributes in namespace
         self.font = pygame.font.SysFont("Calibri",20)
+        self.options_type = pygame.font.SysFont("Calibri", 50)
+        self.pause_type = pygame.font.SysFont("Calibri",80)
+        # Display lives_text
         self.live_text = self.font.render("Lives: ",True,bg)
+        # Surface created
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
+        # Set the image of the heart
         self.hearts = pygame.image.load("heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
-        self.musicPauseFlag = True
+        self.isPaused = False
+
 
     def update(self):
+        '''
+        Draw the amount of lives left
+        '''
         screen.blit(self.live_text, (40,40))
         if self.lives == 3:
             screen.blit(self.hearts,(40, 60))
@@ -678,11 +710,22 @@ class Overlay(pygame.sprite.Sprite):
         if self.lives == 1:
             screen.blit(self.hearts,(40, 60))
         if self.lives == 0:
+            # resets all values and starts from the beginning
             restart()
 
     def main_menu(self):
-        self.screen_text = "Press ESC to resume"
-        self.music_toggle = ('Press "u" to toggle music') #"Press "x" to do function"
+        '''
+        Creates a menu loop inside game, and helps to keep events
+        '''
+        self.screen_text = ("Press ESC to resume")
+        self.music_toggle = ('Press "u" to toggle music')
+        self.mouse_toggle = ('Press "y" to toggle mouse action flip')
+
+        self.pause_render = self.pause_type.render(self.screen_text,True,bg)
+        self.options_render = self.options_type.render(self.music_toggle, True, bg)
+        self.mouse_render = self.options_type.render(self.mouse_toggle,True,bg)
+
+        # Take new image when paused and load to be used
         pygame.image.save(screen,"current_bg.jpg")
         frame = pygame.image.load("current_bg.jpg")
         inMenu = True
@@ -696,37 +739,50 @@ class Overlay(pygame.sprite.Sprite):
                     if event.key == pygame.K_ESCAPE:
                         inMenu = False
                     elif event.key == pygame.K_u:
-                        if self.musicPauseFlag:
+                        if not self.isPaused:
                             pygame.mixer.music.pause()
-                            self.musicPauseFlag = False
+                            self.isPaused = True
                         else:
                             pygame.mixer.music.unpause()
-                            self.musicPauseFlag = True
+                            self.isPaused = False
+                    elif event.key == pygame.K_y:
+                        self.mouseflip = not self.mouseflip
 
             self.pause_type = pygame.font.SysFont("Calibri",80)
             self.pause_render = self.pause_type.render(self.screen_text,True,bg)
             self.options_type = pygame.font.SysFont("Calibri", 50)
             self.options_render = self.options_type.render(self.music_toggle, True, bg)
+
             screen.blit(self.blurSurf(frame,15),(0,0))
             screen.blit(self.pause_render, (450,90))
             screen.blit(self.options_render, (530, 300))
+            screen.blit(self.mouse_render, (450, 400))
             clock.tick(60)
             pygame.display.flip()
 
+    def intro_screen(self):
+         intro_graphic = False
+         intro = True
+         while intro :
+             for event.type in pygame.event_get():
+                 if event.key == pygame.K_RETURN:
+                     pass
+                 if event.key == pygame.K_ESC:
+                     pass
+                 if event.key == pygame.QUIT:
+                     pygame.quit()
 
 
-
-    def blurSurf(self,surface, amt):
+    def blurSurf(self,surface, amount):
         """
-        Blur the given surface by the given 'amount'.  Only values 1 and greater
-        are valid.  Value 1 = no blur.
+        Method used for blurring the background (Source used: 1)
         """
-        scale = 1.0/float(amt)
-        surf_size = surface.get_size()
-        scale_size = (int(surf_size[0]*scale), int(surf_size[1]*scale))
-        surf = pygame.transform.smoothscale(surface, scale_size)
-        surf = pygame.transform.smoothscale(surf, surf_size)
-        return surf
+        scale = 1.0/float(amount)
+        surface_size = surface.get_size()
+        scale_size = (int(surface_size[0]*scale), int(surface_size[1]*scale))
+        surface_soft1 = pygame.transform.smoothscale(surface, scale_size)
+        surface_soft_final = pygame.transform.smoothscale(surface_soft1, surface_size)
+        return surface_soft_final
 
 
 def change_map(map_name):
@@ -742,6 +798,37 @@ def change_map(map_name):
     all_sprites_list.add(player, overlay, all_sprites_list)
     wall_list.add(wall_list)
 
+
+def restart():
+    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
+    lives_left = 3
+    # Create sprite group
+    all_sprites_list = pygame.sprite.Group()
+    wall_list = pygame.sprite.Group()
+    exit_list = pygame.sprite.Group()
+    exit_doors_list = pygame.sprite.Group()
+    attack_sprites_list = pygame.sprite.Group()
+    player_list = pygame.sprite.Group()
+    overlay = Overlay()
+    enemy_list = pygame.sprite.Group()
+
+    player = Player(playerWidth, playerHeight)
+    #enemy = Enemy(1200,600)
+
+    #Draws level
+    draw_map = Level("map1")
+
+
+    # Adds player to sprites list
+
+    all_sprites_list.add(player,overlay)
+    player_list.add(player)
+    wall_list.add(wall_list)
+    obstacles_for_attacks = wall_list
+
+
+
+
 pygame.init()
 
 # dimensions of screen
@@ -753,22 +840,18 @@ bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
 green = (0, 255, 0)
-#bg = (0,0,0)
 grey = (211,211,211)
 white = (255,255,255)
-#red = (220,100,100)
-#green = (0,255,0)
 blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
-yellowInBlackGuy = (241,203,121)
+
 
 
 # Screen
-screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
+screen = pygame.display.set_mode([width, height],pygame.FULLSCREEN)
 pygame.display.set_caption("Sparknight 2: The Sparkening")
 
-lives_left = 3
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
@@ -780,8 +863,6 @@ player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 blur_group = pygame.sprite.Group()
-
-
 
 playerWidth = 30
 playerHeight = 30
@@ -839,6 +920,7 @@ def restart():
     obstacles_for_attacks = wall_list
 
 
+
 #Music file for background Music
 pygame.mixer.music.load('MerryChristmasMr_Lawrence.mp3')
 # Game time for clock functions
@@ -853,20 +935,20 @@ pygame.mixer.music.play(-1, 0.0)
 # LOOP
 done = False
 
-#Hello elston
-
 while not done:
             # Quit pygame
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                # Create object player
                 button_pressed = pygame.mouse.get_pressed()
-                #print button_pressed
             elif event.type == pygame.MOUSEBUTTONUP:
-                if button_pressed[2]:
-                    player.move()
+                if overlay.mouseflip:
+                    if button_pressed[0]:
+                        player.move()
+                elif not overlay.mouseflip:
+                    if button_pressed[2]:
+                        player.move()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
@@ -879,29 +961,19 @@ while not done:
                 elif event.key == pygame.K_ESCAPE:
                     overlay.main_menu()
 
-
-        # Makes sure that the player should not be moving
-        # And that the movement does not push them outside the border
-
-
-        # fills background color
+        # Fills background color
         screen.fill(bg)
+        # Set the background
         screen.blit(background,(0,0))
         # Call update function of sprites
         all_sprites_list.update()
-
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-
-        wall_list.update()
-
         # Set tick rate to 60
         clock.tick(60)
-        #toggle_fullscreen()
         # Redraw screen
-
         pygame.display.flip()
 
-# Quit if loop is exited
+# Quit if loop is exited and stop music
 pygame.mixer.music.stop()
 pygame.quit()
