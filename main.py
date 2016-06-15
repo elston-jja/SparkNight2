@@ -752,17 +752,17 @@ class Overlay(pygame.sprite.Sprite):
             clock.tick(60)
             pygame.display.flip()
 
-    # def intro_screen(self):
-    #     intro_graphic = False
-    #     intro = True
-    #     while intro :
-    #         for event.type == pygame.KEYDOWN:
-    #             if event.key == pygame.K_RETURN:
-    #                 pass
-    #             if event.key == pygame.K_ESC:
-    #                 pass
-    #             if event.key == pygame.QUIT:
-    #                 pygame.quit()
+    def intro_screen(self):
+         intro_graphic = False
+         intro = True
+         while intro :
+             for event.type in pygame.event_get():
+                 if event.key == pygame.K_RETURN:
+                     pass
+                 if event.key == pygame.K_ESC:
+                     pass
+                 if event.key == pygame.QUIT:
+                     pygame.quit()
 
         
     def blurSurf(self,surface, amount):
@@ -789,6 +789,37 @@ def change_map(map_name):
     all_sprites_list.add(player, overlay, all_sprites_list)
     wall_list.add(wall_list)
 
+
+def restart():
+    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
+    lives_left = 3
+    # Create sprite group
+    all_sprites_list = pygame.sprite.Group()
+    wall_list = pygame.sprite.Group()
+    exit_list = pygame.sprite.Group()
+    exit_doors_list = pygame.sprite.Group()
+    attack_sprites_list = pygame.sprite.Group()
+    player_list = pygame.sprite.Group()
+    overlay = Overlay()
+    enemy_list = pygame.sprite.Group()
+
+    player = Player(playerWidth, playerHeight)
+    #enemy = Enemy(1200,600)
+
+    #Draws level
+    draw_map = Level("map1")
+    
+
+    # Adds player to sprites list
+
+    all_sprites_list.add(player,overlay)
+    player_list.add(player)
+    wall_list.add(wall_list)
+    obstacles_for_attacks = wall_list
+
+
+
+    
 pygame.init()
 
 # dimensions of screen
@@ -809,7 +840,7 @@ purple = (128,0,128)
 
 
 # Screen
-screen = pygame.display.set_mode([width, height])
+screen = pygame.display.set_mode([width, height],pygame.FULLSCREEN)
 pygame.display.set_caption("Sparknight 2: The Sparkening")
 
 
@@ -848,32 +879,6 @@ blur_group.add(overlay)
 obstacles_for_attacks = wall_list
 
 
-def restart():
-    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
-    lives_left = 3
-    # Create sprite group
-    all_sprites_list = pygame.sprite.Group()
-    wall_list = pygame.sprite.Group()
-    exit_list = pygame.sprite.Group()
-    exit_doors_list = pygame.sprite.Group()
-    attack_sprites_list = pygame.sprite.Group()
-    player_list = pygame.sprite.Group()
-    overlay = Overlay()
-    enemy_list = pygame.sprite.Group()
-
-    player = Player(playerWidth, playerHeight)
-    #enemy = Enemy(1200,600)
-
-    #Draws level
-    draw_map = Level("map1")
-    
-
-    # Adds player to sprites list
-
-    all_sprites_list.add(player,overlay)
-    player_list.add(player)
-    wall_list.add(wall_list)
-    obstacles_for_attacks = wall_list
 
 
 #Music file for background Music
