@@ -664,6 +664,7 @@ class Overlay(pygame.sprite.Sprite):
         self.image.set_colorkey(bg)
         self.hearts = pygame.image.load("heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
+        self.musicPauseFlag = True
 
     def update(self):
         screen.blit(self.live_text, (40,40))
@@ -680,11 +681,10 @@ class Overlay(pygame.sprite.Sprite):
             restart()
 
     def main_menu(self):
-        #self.image = self.blurSurf(self.image,16)
-        #self.image = pygame.Surface([width, height])
         self.screen_text = "Press ESC to resume"
-        pygame.image.save(screen,"screenshot.jpg")
-        frame = pygame.image.load("screenshot.jpg")
+        self.music_toggle = ('Press "u" to toggle music') #"Press "x" to do function"
+        pygame.image.save(screen,"current_bg.jpg")
+        frame = pygame.image.load("current_bg.jpg")
         inMenu = True
         while inMenu:
             for event in pygame.event.get():
@@ -695,20 +695,24 @@ class Overlay(pygame.sprite.Sprite):
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         inMenu = False
-                    #    surf = pygame.transform.smoothscale(screen, (1440,870))
-                    #    surf = pygame.transform.smoothscale(surf, scale_size)
-                    #    self.image = surf
+                    elif event.key == pygame.K_u:
+                        if self.musicPauseFlag:
+                            pygame.mixer.music.pause()
+                            self.musicPauseFlag = False
+                        else:
+                            pygame.mixer.music.unpause()
+                            self.musicPauseFlag = True
 
-            self.pause_typetext = pygame.font.SysFont("Calibri",80)
-            self.pause_text = self.pause_typetext.render(self.screen_text,True,bg)
+            self.pause_type = pygame.font.SysFont("Calibri",80)
+            self.pause_render = self.pause_type.render(self.screen_text,True,bg)
+            self.options_type = pygame.font.SysFont("Calibri", 50)
+            self.options_render = self.options_type.render(self.music_toggle, True, bg)
             screen.blit(self.blurSurf(frame,15),(0,0))
-
-            #all_sprites_list.draw(screen)
-            screen.blit(self.pause_text, (450,90))
-            #self.image = self.blurSurf(screen,15)
+            screen.blit(self.pause_render, (450,90))
+            screen.blit(self.options_render, (530, 300))
             clock.tick(60)
             pygame.display.flip()
-        #self.image = pygame.Surface([width, height])
+
 
 
 
@@ -723,6 +727,7 @@ class Overlay(pygame.sprite.Sprite):
         surf = pygame.transform.smoothscale(surface, scale_size)
         surf = pygame.transform.smoothscale(surf, surf_size)
         return surf
+
 
 def change_map(map_name):
     '''
