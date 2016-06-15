@@ -328,6 +328,9 @@ class Enemy(Player):
                 enemy_list.add(self)
 
             self.moveTimer -= 1
+    def changeVelocityAfterCollision(self):
+        Player.changeVelocityAfterCollision(self)
+        print 'It\s working'
 
     def update(self):
         self.move()
@@ -698,7 +701,7 @@ class Overlay(pygame.sprite.Sprite):
                     #    surf = pygame.transform.smoothscale(screen, (1440,870))
                     #    surf = pygame.transform.smoothscale(surf, scale_size)
                     #    self.image = surf
-            
+
             self.pause_typetext = pygame.font.SysFont("Calibri",80)
             self.pause_text = self.pause_typetext.render(self.screen_text,True,bg)
             screen.blit(self.blurSurf(frame,15),(0,0))
@@ -820,7 +823,7 @@ def restart():
 
     #Draws level
     draw_map = Level("map1")
-    
+
 
     # Adds player to sprites list
 
