@@ -571,8 +571,8 @@ class Level:
         # Value not needed except for verbosity
         self.level = level
         # Default x y starting block cordinates
-        x = 0
-        y = 0
+        self.x = 0
+        self.y = 0
         # Creates object called "list of maps" and I can call all maps
         # From the lists in the maps_list file
         list_of_maps = maps()
@@ -581,53 +581,41 @@ class Level:
         exec_var = "self.current_level = list_of_maps." + str(self.level)
         exec (exec_var)
         # Get the lines/rows from each variable in the list
+        self.make_level()
+
+    def make_level(self):
+        
         for line_row in self.current_level:
             # Check each character in the row
             for char in line_row:
                 # if the character is a 'w' then add a wall block (30,30)
                 if char == "w":
-                    wall = Wall(x,y,grey)
+                    wall = Wall(self.x,self.y,grey)
                     wall_list.add(wall)
                     all_sprites_list.add(wall)
                 # If the character is an 'e' then add an wall block
                 # That when collided can cause to exit
                 # As it is added to the exitdoor list (change var is need be)
                 if char == "e":
-                    exit_ = Wall(x,y,red)
+                    exit_ = Wall(self.x,self.y,red)
                     wall_list.add(exit_)
                     exit_list.add(exit_)
                     all_sprites_list.add(exit_)
-                elif char == "y":
-                    wall = Wall(x,y,yellow)
-                    wall_list.add(wall)
-                    all_sprites_list.add(wall)
-                elif char == "g":
-                    wall = Wall(x,y,green)
-                    wall_list.add(wall)
-                    all_sprites_list.add(wall)
-                elif char == "p":
-                    wall = Wall(x,y,purple)
-                    wall_list.add(wall)
-                    all_sprites_list.add(wall)
-                elif char == "y":
-                    wall = Wall(x,y,yellow)
-                    wall_list.add(wall)
-                    all_sprites_list.add(wall)
                 elif char == "P":
-                    player.rect.x = x
-                    player.rect.y = y
+                    player.rect.x = self.x
+                    player.rect.y = self.y
                 elif char == "E":
-                    enemy = Enemy(x,y)
+                    enemy = Enemy(self.x,self.y)
                     enemy_list.add(enemy)
                     all_sprites_list.add(enemy)
                     # When drawing each block
                     # (Character in row)
                     # Move 30px to the right
-                x+= 30
+                self.x+= 30
                 # When moving down to next row change the Y by 30
                 # Reset th X
-            y+=30
-            x = 0
+            self.y+=30
+            self.x = 0
 
 class Wall(pygame.sprite.Sprite):
 
@@ -758,7 +746,7 @@ class Overlay(pygame.sprite.Sprite):
                     # Toggle fullscreen
                     elif event.key == pygame.K_i:
                         flags=screen.get_flags()
-                        if screen.get_flags() & FULLSCREEN:
+                        if screen.get_flags() & pygame.FULLSCREEN:
                             pygame.display.set_mode([1440,870], pygame.RESIZABLE)
                         else:
                             pygame.display.set_mode([1440,870], pygame.FULLSCREEN)
