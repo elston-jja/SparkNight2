@@ -328,9 +328,6 @@ class Enemy(Player):
                 enemy_list.add(self)
 
             self.moveTimer -= 1
-    def changeVelocityAfterCollision(self):
-        Player.changeVelocityAfterCollision(self)
-        print 'It\s working'
 
     def update(self):
         self.move()
