@@ -4,7 +4,6 @@ Move Towards Mouse
 '''
 
 import pygame
-from FieldofEffect import *
 from math import *
 from pygame.locals import *
 from map_list import maps
@@ -688,6 +687,7 @@ class Overlay(pygame.sprite.Sprite):
         # Set the image of the heart
         self.hearts = pygame.image.load("heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
+        self.isPaused = False
 
     def update(self):
         '''
@@ -731,7 +731,12 @@ class Overlay(pygame.sprite.Sprite):
                     if event.key == pygame.K_ESCAPE:
                         inMenu = False
                     elif event.key == pygame.K_u:
-                        print " STOP MUSIC "
+                        if not self.isPaused:
+                            pygame.mixer.music.pause()
+                            self.isPaused = True
+                        else:
+                            pygame.mixer.music.unpause()
+                            self.isPaused = False
                         
             
             # Draw blurred background and font on top
