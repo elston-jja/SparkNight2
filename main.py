@@ -4,6 +4,7 @@ Move Towards Mouse
 '''
 
 import pygame
+from FieldofEffect import *
 from math import *
 from pygame.locals import *
 from map_list import maps
@@ -203,14 +204,11 @@ class Player(pygame.sprite.Sprite):
         orb = ElectricityOrb()
         attack_sprites_list.add(orb)
         all_sprites_list.add(orb)
-        #print 'it worked in the function?'
-
-    #def attack_R(self):
-#        laser = Laser()
-#        attack_sprites_list.add(laser)
-#        all_sprites_list.add(laser)
 
     def attack_W(self):
+        '''
+        Calls the field of effect attack based on the loation of the player
+        '''
         area_of_effect = FieldofEffect()
         attack_sprites_list.add(area_of_effect)
         all_sprites_list.add(area_of_effect)
@@ -493,7 +491,6 @@ class ElectricityOrb(Player):
         screen.blit(self.orbDrawImage, (self.rect.x, self.rect.y))
 
 
-
 class FieldofEffect(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -510,6 +507,9 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.loop_animation = 1
 
     def draw(self):
+        '''
+        Draw radiating circles as attack for player
+        '''
         # Increase Field level
         self.field_level += 2
 
@@ -547,8 +547,10 @@ class FieldofEffect(pygame.sprite.Sprite):
             all_sprites_list.remove(self)
 
     def check_collisions(self):
+        '''
+        Removes the attack, when a new level has been loaded
+        '''
         self.exit_level = pygame.sprite.spritecollide(self,exit_list,False)
-        #If collision was at exit block, loads new map
         if self.exit_level:
             all_sprites_list.remove(self)
             attack_sprites_list.remove(self)
@@ -556,8 +558,11 @@ class FieldofEffect(pygame.sprite.Sprite):
     def update(self):
         self.draw()
 
-class Level:
 
+class Level:
+    '''
+    Checks the level and display it accoringly
+    '''
     def __init__(self,level):
         # State the initial level number
         # Value not needed except for verbosity
@@ -627,24 +632,35 @@ class Wall(pygame.sprite.Sprite):
 
         # Base sprite class with collisions
         pygame.sprite.Sprite.__init__(self)
+        # Create the width and height of surface
         self.image = pygame.Surface([30,30])
         self.rect = self.image.get_rect()
         self.color = color
+        # Set the colors
         self.image.fill(color)
-        if self.color == grey:
-            self.image.set_colorkey(color)
-            self.block = pygame.image.load("wall.png").convert()
-            self.block = pygame.transform.scale(self.block,(30,30))
-        elif self.color == red:
-            self.image.set_colorkey(color)
-            self.block = pygame.image.load("exit.png").convert_alpha()
-            self.block = pygame.transform.scale(self.block,(30,30))
+        self.image.set_colorkey(color)
+        # Check to see what color and draw
+        # an image accordingly
+        self.checkBlockSprite()
+        # Set the image to be drawn at given x and y cords
         self.x = x
         self.y = y
         self.rect.x = x
         self.rect.y = y
-        #screen.blit(self.block,(90,90))
 
+    def checkBlockSprite(self):
+        '''
+        Checks to see what was the color code of the block
+        this enables the program to know what type of block to draw
+        using different color codes
+        '''
+        if self.color == grey:
+            self.block = pygame.image.load("wall.png").convert()
+            self.block = pygame.transform.scale(self.block,(30,30))
+        elif self.color == red:
+            self.block = pygame.image.load("exit.png").convert_alpha()
+            self.block = pygame.transform.scale(self.block,(30,30))
+        
     def update(self):
         if self.color == grey:
             screen.blit(self.block,(self.x,self.y))
@@ -655,17 +671,28 @@ class Overlay(pygame.sprite.Sprite):
 
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
+        # Declare base amount of lives
         self.lives = 3
+        # Initialize fonts
         pygame.font.init()
+        # Create fontattributes in namespace
         self.font = pygame.font.SysFont("Calibri",20)
+        self.options_type = pygame.font.SysFont("Calibri", 50)
+        self.pause_type = pygame.font.SysFont("Calibri",80)
+        # Display lives_text
         self.live_text = self.font.render("Lives: ",True,bg)
+        # Surface created
         self.image = pygame.Surface([width, height])
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
+        # Set the image of the heart
         self.hearts = pygame.image.load("heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
 
     def update(self):
+        '''
+        Draw the amount of lives left
+        '''
         screen.blit(self.live_text, (40,40))
         if self.lives == 3:
             screen.blit(self.hearts,(40, 60))
@@ -677,11 +704,20 @@ class Overlay(pygame.sprite.Sprite):
         if self.lives == 1:
             screen.blit(self.hearts,(40, 60))
         if self.lives == 0:
+            # resets all values and starts from the beginning
             restart()
 
     def main_menu(self):
-        self.screen_text = "Press ESC to resume"
-        self.music_toggle = ('Press "u" to toggle music') #"Press "x" to do function"
+        '''
+        Creates a menu loop inside game, and helps to keep events
+        '''
+        self.screen_text = ("Press ESC to resume")
+        self.music_toggle = ('Press "u" to toggle music')
+        
+        self.pause_render = self.pause_type.render(self.screen_text,True,bg)
+        self.options_render = self.options_type.render(self.music_toggle, True, bg)
+
+        # Take new image when paused and load to be used
         pygame.image.save(screen,"current_bg.jpg")
         frame = pygame.image.load("current_bg.jpg")
         inMenu = True
@@ -697,30 +733,24 @@ class Overlay(pygame.sprite.Sprite):
                     elif event.key == pygame.K_u:
                         print " STOP MUSIC "
                         
-            self.pause_type = pygame.font.SysFont("Calibri",80)
-            self.pause_render = self.pause_type.render(self.screen_text,True,bg)
-            self.options_type = pygame.font.SysFont("Calibri", 50)
-            self.options_render = self.options_type.render(self.music_toggle, True, bg)
+            
+            # Draw blurred background and font on top
             screen.blit(self.blurSurf(frame,15),(0,0))
             screen.blit(self.pause_render, (450,90))
             screen.blit(self.options_render, (530, 300))
             clock.tick(60)
             pygame.display.flip()
 
-
-
-
-    def blurSurf(self,surface, amt):
+    def blurSurf(self,surface, amount):
         """
-        Blur the given surface by the given 'amount'.  Only values 1 and greater
-        are valid.  Value 1 = no blur.
+        Method used for blurring the background (Source used: 1)
         """
-        scale = 1.0/float(amt)
-        surf_size = surface.get_size()
-        scale_size = (int(surf_size[0]*scale), int(surf_size[1]*scale))
-        surf = pygame.transform.smoothscale(surface, scale_size)
-        surf = pygame.transform.smoothscale(surf, surf_size)
-        return surf
+        scale = 1.0/float(amount)
+        surface_size = surface.get_size()
+        scale_size = (int(surface_size[0]*scale), int(surface_size[1]*scale))
+        surface_soft1 = pygame.transform.smoothscale(surface, scale_size)
+        surface_soft_final = pygame.transform.smoothscale(surface_soft1, surface_size)
+        return surface_soft_final
 
 def change_map(map_name):
     '''
@@ -758,10 +788,9 @@ yellowInBlackGuy = (241,203,121)
 
 
 # Screen
-screen = pygame.display.set_mode([width, height]) #,flags^FULLSCREEN,bits)
+screen = pygame.display.set_mode([width, height])
 pygame.display.set_caption("Sparknight 2: The Sparkening")
 
-lives_left = 3
 
 # Create sprite group
 all_sprites_list = pygame.sprite.Group()
@@ -773,8 +802,6 @@ player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 blur_group = pygame.sprite.Group()
-
-
 
 playerWidth = 30
 playerHeight = 30
@@ -822,13 +849,9 @@ def restart():
 
     # Adds player to sprites list
 
-    all_sprites_list.add(player)
+    all_sprites_list.add(player,overlay)
     player_list.add(player)
-
-    all_sprites_list.add(overlay)
-
     wall_list.add(wall_list)
-
     obstacles_for_attacks = wall_list
 
 
@@ -847,6 +870,7 @@ pygame.mixer.music.play(-1, 1.0)
 done = False
 
 #Hello elston
+#Hi lance     
 
 while not done:
             # Quit pygame
@@ -854,9 +878,7 @@ while not done:
             if event.type == pygame.QUIT:
                 done = True
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                # Create object player
                 button_pressed = pygame.mouse.get_pressed()
-                #print button_pressed
             elif event.type == pygame.MOUSEBUTTONUP:
                 if button_pressed[2]:
                     player.move()
@@ -871,30 +893,20 @@ while not done:
                     done = True
                 elif event.key == pygame.K_ESCAPE:
                     overlay.main_menu()
-
-
-        # Makes sure that the player should not be moving
-        # And that the movement does not push them outside the border
-
-
-        # fills background color
+            
+        # Fills background color
         screen.fill(bg)
+        # Set the background
         screen.blit(background,(0,0))
         # Call update function of sprites
         all_sprites_list.update()
-
         # Draw all sprites on screen
         all_sprites_list.draw(screen)
-
-        wall_list.update()
-
         # Set tick rate to 60
         clock.tick(60)
-        #toggle_fullscreen()
         # Redraw screen
-
         pygame.display.flip()
 
-# Quit if loop is exited
+# Quit if loop is exited and stop music
 pygame.mixer.music.stop()
 pygame.quit()
