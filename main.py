@@ -584,7 +584,7 @@ class Level:
         self.make_level()
 
     def make_level(self):
-        
+
         for line_row in self.current_level:
             # Check each character in the row
             for char in line_row:
