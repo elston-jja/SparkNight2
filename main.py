@@ -507,7 +507,7 @@ class FieldofEffect(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
         # Number of times to loop animation
-        self.loop_animation = 3
+        self.loop_animation = 1
 
     def draw(self):
         # Increase Field level
@@ -683,6 +683,8 @@ class Overlay(pygame.sprite.Sprite):
         #self.image = self.blurSurf(self.image,16)
         #self.image = pygame.Surface([width, height])
         self.screen_text = "Press ESC to resume"
+        pygame.image.save(screen,"screenshot.jpg")
+        frame = pygame.image.load("screenshot.jpg")
         inMenu = True
         while inMenu:
             for event in pygame.event.get():
@@ -696,12 +698,13 @@ class Overlay(pygame.sprite.Sprite):
                     #    surf = pygame.transform.smoothscale(screen, (1440,870))
                     #    surf = pygame.transform.smoothscale(surf, scale_size)
                     #    self.image = surf
-
+            
             self.pause_typetext = pygame.font.SysFont("Calibri",80)
             self.pause_text = self.pause_typetext.render(self.screen_text,True,bg)
+            screen.blit(self.blurSurf(frame,15),(0,0))
 
             #all_sprites_list.draw(screen)
-            screen.blit(self.pause_text, (90,90))
+            screen.blit(self.pause_text, (450,90))
             #self.image = self.blurSurf(screen,15)
             clock.tick(60)
             pygame.display.flip()
@@ -817,6 +820,7 @@ def restart():
 
     #Draws level
     draw_map = Level("map1")
+    
 
     # Adds player to sprites list
 
