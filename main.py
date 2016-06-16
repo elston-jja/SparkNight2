@@ -1,6 +1,6 @@
-
+#!/usr/bin/python2
 '''
-Move Towards Mouse
+Main
 '''
 
 import pygame
