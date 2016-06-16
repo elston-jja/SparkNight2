@@ -3,6 +3,23 @@
 Main
 '''
 
+# SOURCES
+
+# blurSurf function
+# http://www.akeric.com/blog/?p=720
+
+# level making and other functions
+# http://pygame.org
+
+# Wizard sprite
+# http://vignette3.wikia.nocookie.net/scribblenauts/images/f/fc/Wizard_Male.png/revision/latest?cb=20130215182314
+
+# Player sprite
+# http://piq.codeus.net/static/media/userpics/piq_244306_100x100.png
+
+
+
+
 import pygame
 from math import *
 from map_list import maps
