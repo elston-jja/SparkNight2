@@ -846,7 +846,7 @@ class Overlay(pygame.sprite.Sprite):
 
     def blurSurf(self,surface, amount):
         """
-        Method used for blurring the background (Source used: 1)
+        Method used for blurring the background (Look at Source)
         """
         scale = 1.0/float(amount)
         surface_size = surface.get_size()
