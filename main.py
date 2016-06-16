@@ -253,6 +253,7 @@ class Enemy(Player):
         self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 180)
         self.imageSprite = self.imageMasterSprite
         self.imageSprite.set_colorkey(white)
+        self.isBoss = False
 
     def move(self):
         '''
@@ -322,7 +323,7 @@ class Enemy(Player):
             if self.attack_collide:
                 self.health -= 1
 
-            if self.player_collide:
+            if self.player_collide and not self.isBoss:
                 #print 'What up my boi'
                 overlay.lives -= 1
                 all_sprites_list.remove(self)
@@ -339,10 +340,42 @@ class Enemy(Player):
 
         Player.update(self)
 
+class BossEnemy(Enemy):
+
+    def __init__(self,spawnx,spawny):
+        Player.__init__(self,spawnx,spawny)
+        self.health = 300
+        #self.image = ""
+        self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
+        self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
+        self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
+        self.imageMasterSprite = pygame.image.load("pickachu.png").convert()
+        self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (80,80))
+        #self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 180)
+        self.imageSprite = self.imageMasterSprite
+        self.imageSprite.set_colorkey(white)
+        self.isBoss = True
+
+    def get_pos(self):
+        pass
+
+    def attack_Q(self):
+        '''
+        Creates the Q electricity ball attack, and projects
+        it to wherever the mouse was
+        '''
+        orb = ElectricityOrb(True)
+        attack_sprites_list.add(orb)
+        all_sprites_list.add(orb)
+
+    def update(self):
+        self.angle_move = 0
+        self.attack_Q()
+        Player.update(self)
 
 class ElectricityOrb(Player):
 
-    def __init__(self):
+    def __init__(self, isBoss = False):
 
         pygame.sprite.Sprite.__init__(self)
         # Width and height of image
@@ -398,7 +431,14 @@ class ElectricityOrb(Player):
         self.orbExplision_image.set_colorkey(bg)
         self.obstacle = wall_list
         self.exploded = False
+        self.isBoss = isBoss
         self.move()
+
+    def move(self):
+        if self.isBoss:
+            boss_enemy
+        else:
+            Player.move(self)
 
     def get_pos(self):
         pass
@@ -612,6 +652,10 @@ class Level:
                     # When drawing each block
                     # (Character in row)
                     # Move 30px to the right
+                elif char == "B":
+                    boss_enemy = BossEnemy(self.x,self.y)
+                    enemy_list.add(boss_enemy)
+                    all_sprites_list.add(boss_enemy)
                 self.x+= 30
                 # When moving down to next row change the Y by 30
                 # Reset th X
@@ -898,37 +942,6 @@ blur_group.add(overlay)
 obstacles_for_attacks = wall_list
 
 
-def restart():
-    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
-    lives_left = 3
-    # Create sprite group
-    all_sprites_list = pygame.sprite.Group()
-    wall_list = pygame.sprite.Group()
-    exit_list = pygame.sprite.Group()
-    exit_doors_list = pygame.sprite.Group()
-    attack_sprites_list = pygame.sprite.Group()
-    player_list = pygame.sprite.Group()
-    overlay = Overlay()
-    enemy_list = pygame.sprite.Group()
-
-    player = Player(playerWidth, playerHeight)
-    #enemy = Enemy(1200,600)
-
-    #Draws level
-    draw_map = Level("map1")
-
-
-    # Adds player to sprites list
-
-    all_sprites_list.add(player)
-    player_list.add(player)
-
-    all_sprites_list.add(overlay)
-
-    wall_list.add(wall_list)
-
-    obstacles_for_attacks = wall_list
-
 
 
 #Music file for background Music
@@ -970,6 +983,9 @@ while not done:
                     done = True
                 elif event.key == pygame.K_ESCAPE:
                     overlay.main_menu()
+                elif event.key == pygame.K_m:
+                    player.map_number = 5
+                    change_map('map5')
 
         # Fills background color
         screen.fill(bg)
