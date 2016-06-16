@@ -250,6 +250,7 @@ class Enemy(Player):
         self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
         self.imageMasterSprite = pygame.image.load("Wizard_Male.png").convert()
         self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (30,30))
+        self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 180)
         self.imageSprite = self.imageMasterSprite
         self.imageSprite.set_colorkey(white)
 
