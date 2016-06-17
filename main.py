@@ -1,6 +1,9 @@
 #!/usr/bin/python2
 '''
-Main
+Main file of Spark Night game
+@author: Elston Almeida and Lance Pereira
+@date: June 17, 2016
+@course: ICS3U1
 '''
 
 # SOURCES
@@ -257,12 +260,14 @@ class Player(pygame.sprite.Sprite):
 class Enemy(Player):
 
     def __init__(self,spawnx,spawny):
+        '''
+        Explenations of attributes in Player Class
+        '''
         pygame.sprite.Sprite.__init__(self)
         Player.__init__(self, 30, 30)
         self.rect.x = spawnx
         self.rect.y = spawny
         self.health = 3
-        #self.image = ""
         self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
         self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
         self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
@@ -275,7 +280,7 @@ class Enemy(Player):
 
     def move(self):
         '''
-        Updates the velocities of the player after detecting a mouse click
+        Updates the velocities of the enemy by, checking where the player is and drawing hypotonus to it
         '''
         #determines how many increment to move the object by, say the
         #difference in x was 80, this would divide that by say 40 and get 2,
@@ -307,7 +312,7 @@ class Enemy(Player):
 
     def moveUpdate(self):
         '''
-        Changes the x and y position of the player
+        Changes the x and y position of the enemy
         '''
         #Checks to see if the move timer is over
         if self.moveTimer > 0:
@@ -352,7 +357,7 @@ class Enemy(Player):
 
     def update(self):
         self.move()
-        
+
         if self.health <= 0:
             all_sprites_list.remove(self)
 
@@ -361,6 +366,9 @@ class Enemy(Player):
 class BossEnemy(Enemy):
 
     def __init__(self,spawnx,spawny):
+        '''
+        Explanation of attributes in Parent class
+        '''
         Player.__init__(self,spawnx,spawny)
         self.health = 300
         #self.image = ""
@@ -375,6 +383,7 @@ class BossEnemy(Enemy):
         self.isBoss = True
 
     def get_pos(self):
+        #Done to overide the rotation of boss, as boss rotations make it too dangerous
         pass
 
     def attack_Q(self):
@@ -394,7 +403,9 @@ class BossEnemy(Enemy):
 class ElectricityOrb(Player):
 
     def __init__(self, isBoss = False):
-
+        '''
+        attributes explained in Player class
+        '''
         pygame.sprite.Sprite.__init__(self)
         # Width and height of image
         self.width = 30
@@ -448,17 +459,16 @@ class ElectricityOrb(Player):
         self.orb_image.set_colorkey(bg)
         self.orbExplision_image.set_colorkey(bg)
         self.obstacle = wall_list
+        #Determines which image to load for the orb
         self.exploded = False
         self.isBoss = isBoss
         self.move()
 
-    def move(self):
-        if self.isBoss:
-            boss_enemy
-        else:
-            Player.move(self)
+    """def move(self):
+            Player.move(self)"""
 
     def get_pos(self):
+        #Stops rotation of orbs, as it messes with collisions
         pass
 
     def moveUpdate(self):
@@ -749,13 +759,16 @@ class Overlay(pygame.sprite.Sprite):
         '''
         screen.blit(self.live_text, (40,40))
         if self.lives == 3:
+            #Draws three hearts
             screen.blit(self.hearts,(40, 60))
             screen.blit(self.hearts,(80, 60))
             screen.blit(self.hearts,(120, 60))
         if self.lives == 2:
+            #Draws 2
             screen.blit(self.hearts,(40, 60))
             screen.blit(self.hearts,(80, 60))
         if self.lives == 1:
+            #Please use your brain
             screen.blit(self.hearts,(40, 60))
         if self.lives == 0:
             # resets all values and starts from the beginning
@@ -780,7 +793,7 @@ class Overlay(pygame.sprite.Sprite):
         # Take new image when paused and load to be used
         pygame.image.save(screen,"ImagesAndSounds/current_bg.jpg")
         frame = pygame.image.load("ImagesAndSounds/current_bg.jpg")
-        # Run nested loop for menu events
+        # Run nested loop for menu events, waiting for esc key to unlock
         inMenu = True
         while inMenu:
             for event in pygame.event.get():
@@ -830,6 +843,9 @@ class Overlay(pygame.sprite.Sprite):
             pygame.display.flip()
 
     def intro_screen(self):
+        '''
+        Creates intro screen -NOT IMPLEMENTED
+        '''
         try:
          intro_graphic = False
          intro = True
@@ -848,10 +864,13 @@ class Overlay(pygame.sprite.Sprite):
     def blurSurf(self,surface, amount):
         """
         Method used for blurring the background (Look at Source)
+        -> look at source: http://www.akeric.com/blog/?p=720
         """
+        #Takes screenshot of screen
         scale = 1.0/float(amount)
         surface_size = surface.get_size()
         scale_size = (int(surface_size[0]*scale), int(surface_size[1]*scale))
+        #Transforms it and add blurring effect
         surface_soft1 = pygame.transform.smoothscale(surface, scale_size)
         surface_soft_final = pygame.transform.smoothscale(surface_soft1, surface_size)
         return surface_soft_final
@@ -902,10 +921,9 @@ def restart():
     # dimensions of screen
 
 
-    # COLORS
+pygame.init()
 
-
-   
+# COLORS
 bg = (0, 0, 0)
 white = (255, 255, 255)
 red = (255, 0, 0)
@@ -915,7 +933,7 @@ white = (255,255,255)
 blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
-    
+
 width = 1440
 height = 870
 
@@ -939,6 +957,7 @@ player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
 
+
 playerWidth = 30
 playerHeight = 30
 #Move player Position###
@@ -959,7 +978,6 @@ all_sprites_list.add(overlay)
 wall_list.add(wall_list)
 
 
-
 obstacles_for_attacks = wall_list
 
 
@@ -977,8 +995,22 @@ background = pygame.image.load("ImagesAndSounds/background.jpg").convert()
 background = pygame.transform.scale(background,(1440,900))
 pygame.mixer.music.play(-1, 0.0)
 # LOOP
-done = False
+if __name__ == "__main__":
+    done = False
+else:
+    done = True
+    # Set the background
+    screen.blit(background,(0,0))
+    # Call update function of sprites
+    all_sprites_list.update()
+    # Draw all sprites on screen
+    all_sprites_list.draw(screen)
+    # Set tick rate to 60
+    clock.tick(60)
+    # Redraw screen
+    pygame.display.flip()
 
+#Main game loop, handles all events, runs till user quits
 while not done:
             # Quit pygame
         for event in pygame.event.get():
@@ -1020,4 +1052,3 @@ while not done:
 # Quit if loop is exited and stop music
 pygame.mixer.music.stop()
 pygame.quit()
-
