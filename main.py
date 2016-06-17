@@ -17,6 +17,9 @@ Main
 # Player sprite
 # http://piq.codeus.net/static/media/userpics/piq_244306_100x100.png
 
+# WoodSprite
+# http://www.thewallpapers.org/photo/34665/Wood-003.jpg
+
 import pygame
 from math import *
 from map_list import maps
