@@ -915,13 +915,10 @@ def restart():
 
 
 
+    # dimensions of screen
+
 
 pygame.init()
-#pygame.display.init()
-
-# dimensions of screen
-width = 1440
-height = 870
 
 # COLORS
 bg = (0, 0, 0)
@@ -934,7 +931,14 @@ blue = (0,0,255)
 yellow = (255,255,0)
 purple = (128,0,128)
 
+width = 1440
+height = 870
 
+
+
+
+
+pygame.init()
 
 # Screen
 screen = pygame.display.set_mode([width, height],pygame.FULLSCREEN)
@@ -949,7 +953,7 @@ attack_sprites_list = pygame.sprite.Group()
 player_list = pygame.sprite.Group()
 overlay = Overlay()
 enemy_list = pygame.sprite.Group()
-#blur_group = pygame.sprite.Group()
+
 
 playerWidth = 30
 playerHeight = 30
@@ -969,7 +973,6 @@ all_sprites_list.add(player)
 player_list.add(player)
 all_sprites_list.add(overlay)
 wall_list.add(wall_list)
-#blur_group.add(overlay)
 
 
 obstacles_for_attacks = wall_list

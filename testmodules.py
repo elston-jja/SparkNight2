@@ -36,5 +36,6 @@ class Testmain(unittest.TestCase):
         self.assertEqual(player.remainderxvelocity,-1)
         self.assertEqual(player.remainderyvelocity,1)
 
+
 if __name__ == '__main__':
     unittest.main()
