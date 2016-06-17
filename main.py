@@ -17,12 +17,10 @@ Main
 # Player sprite
 # http://piq.codeus.net/static/media/userpics/piq_244306_100x100.png
 
-
-
-
 import pygame
 from math import *
 from map_list import maps
+#from ImagesAndSounds import *
 global done
 
 class Player(pygame.sprite.Sprite):
@@ -82,7 +80,7 @@ class Player(pygame.sprite.Sprite):
         self.obstacle = wall_list
 
         #Adds pickachu image
-        self.imageMasterSprite = pygame.image.load("pickachu.png").convert()
+        self.imageMasterSprite = pygame.image.load("ImagesAndSounds/pickachu.png").convert()
         self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 90)
         self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (35,35))
         self.imageSprite = self.imageMasterSprite
@@ -265,7 +263,7 @@ class Enemy(Player):
         self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
         self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
         self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
-        self.imageMasterSprite = pygame.image.load("Wizard_Male.png").convert()
+        self.imageMasterSprite = pygame.image.load("ImagesAndSounds/Wizard_Male.png").convert()
         self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (30,30))
         self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 180)
         self.imageSprite = self.imageMasterSprite
@@ -351,7 +349,7 @@ class Enemy(Player):
 
     def update(self):
         self.move()
-
+        
         if self.health <= 0:
             all_sprites_list.remove(self)
 
@@ -366,7 +364,7 @@ class BossEnemy(Enemy):
         self.enemey_collide = pygame.sprite.spritecollide(self, enemy_list, False)
         self.player_collide = pygame.sprite.spritecollide(self, player_list, False)
         self.attack_collide = pygame.sprite.spritecollide(self, attack_sprites_list, False)
-        self.imageMasterSprite = pygame.image.load("pickachu.png").convert()
+        self.imageMasterSprite = pygame.image.load("ImagesAndSounds/pickachu.png").convert()
         self.imageMasterSprite = pygame.transform.scale(self.imageMasterSprite, (80,80))
         #self.imageMasterSprite = pygame.transform.rotate(self.imageMasterSprite, 180)
         self.imageSprite = self.imageMasterSprite
@@ -442,8 +440,8 @@ class ElectricityOrb(Player):
         self.moveFactor = 40
         #Boolean value that determines if a wall was hit
         self.wallCollision = pygame.sprite.spritecollide(self, wall_list, False)
-        self.orb_image = pygame.image.load("better_orb.png").convert()
-        self.orbExplision_image = pygame.image.load("orb_explosion_large.png").convert()
+        self.orb_image = pygame.image.load("ImagesAndSounds/better_orb.png").convert()
+        self.orbExplision_image = pygame.image.load("ImagesAndSounds/orb_explosion_large.png").convert()
         self.orb_image.set_colorkey(bg)
         self.orbExplision_image.set_colorkey(bg)
         self.obstacle = wall_list
@@ -708,17 +706,14 @@ class Wall(pygame.sprite.Sprite):
         using different color codes
         '''
         if self.color == grey:
-            self.block = pygame.image.load("wall.png").convert()
+            self.block = pygame.image.load("ImagesAndSounds/wall.png").convert()
             self.block = pygame.transform.scale(self.block,(30,30))
-        elif self.color == red:
-            self.block = pygame.image.load("exit.png").convert_alpha()
+        else:
+            self.block = pygame.image.load("ImagesAndSounds/exit.png").convert_alpha()
             self.block = pygame.transform.scale(self.block,(30,30))
 
     def update(self):
-        if self.color == grey:
-            screen.blit(self.block,(self.x,self.y))
-        if self.color == red:
-            screen.blit(self.block,(self.x,self.y))
+        screen.blit(self.block,(self.x,self.y))
 
 class Overlay(pygame.sprite.Sprite):
 
@@ -740,7 +735,7 @@ class Overlay(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.image.set_colorkey(bg)
         # Set the image of the heart
-        self.hearts = pygame.image.load("heart.png").convert_alpha()
+        self.hearts = pygame.image.load("ImagesAndSounds/heart.png").convert_alpha()
         self.hearts = pygame.transform.scale(self.hearts,(30,30))
         self.isPaused = False
 
@@ -780,8 +775,8 @@ class Overlay(pygame.sprite.Sprite):
         self.fullscreen_render = self.options_type.render(self.fullscreen_toggle,True,bg)
         self.quitswitch_render = self.options_type.render(self.quitswitch,True,bg)
         # Take new image when paused and load to be used
-        pygame.image.save(screen,"current_bg.jpg")
-        frame = pygame.image.load("current_bg.jpg")
+        pygame.image.save(screen,"ImagesAndSounds/current_bg.jpg")
+        frame = pygame.image.load("ImagesAndSounds/current_bg.jpg")
         # Run nested loop for menu events
         inMenu = True
         while inMenu:
@@ -832,6 +827,7 @@ class Overlay(pygame.sprite.Sprite):
             pygame.display.flip()
 
     def intro_screen(self):
+        try:
          intro_graphic = False
          intro = True
          while intro :
@@ -842,6 +838,8 @@ class Overlay(pygame.sprite.Sprite):
                      pass
                  if event.key == pygame.QUIT:
                      pygame.quit()
+        except:
+            raise NotImplemented("Not done")
 
 
     def blurSurf(self,surface, amount):
@@ -891,7 +889,6 @@ def restart():
 
 
     # Adds player to sprites list
-
     all_sprites_list.add(player,overlay)
     player_list.add(player)
     wall_list.add(wall_list)
@@ -962,14 +959,14 @@ obstacles_for_attacks = wall_list
 
 
 #Music file for background Music
-pygame.mixer.music.load('MerryChristmasMr_Lawrence.mp3')
+pygame.mixer.music.load('ImagesAndSounds/MerryChristmasMr_Lawrence.mp3')
 # Game time for clock functions
 clock = pygame.time.Clock()
 
 # Fill background (Makes cicle, when loop screen.fill is commented)
 #screen.fill(bg)
 
-background = pygame.image.load("background2.jpg").convert()
+background = pygame.image.load("ImagesAndSounds/background.jpg").convert()
 background = pygame.transform.scale(background,(1440,900))
 pygame.mixer.music.play(-1, 0.0)
 # LOOP
@@ -986,14 +983,12 @@ while not done:
                 if overlay.mouseflip:
                     if button_pressed[0]:
                         player.move()
-                elif not overlay.mouseflip:
+                else:
                     if button_pressed[2]:
                         player.move()
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_q:
                     player.attack_Q()
-                #if event.key == pygame.K_r:
-                #    player.attack_R()
                 elif event.key == pygame.K_w:
                     player.attack_W()
                 elif event.key == pygame.K_c:
@@ -1004,8 +999,6 @@ while not done:
                     player.map_number = 5
                     change_map('map5')
 
-        # Fills background color
-        screen.fill(bg)
         # Set the background
         screen.blit(background,(0,0))
         # Call update function of sprites
