@@ -792,7 +792,7 @@ class Overlay(pygame.sprite.Sprite):
                     # Toggle music
                     elif event.key == pygame.K_u:
                         self.isPaused = not self.isPaused
-                        if isPaused:
+                        if self.isPaused:
                             pygame.mixer.music.pause()
                         else:
                             pygame.mixer.music.unpause()
