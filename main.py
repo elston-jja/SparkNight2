@@ -917,7 +917,7 @@ def restart():
 
 
 pygame.init()
-pygame.display.init()
+#pygame.display.init()
 
 # dimensions of screen
 width = 1440
