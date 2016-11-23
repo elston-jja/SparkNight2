@@ -884,20 +884,21 @@ def change_map(map_name):
     wall_list.empty()
     exit_list.empty()
     attack_sprites_list.empty()
-    exit_doors_list.empty()
+    #exit_doors_list.empty()
     Level(map_name)
     all_sprites_list.add(player, overlay, all_sprites_list)
     wall_list.add(wall_list)
 
 # HARD RESET, worst way to reset.
 def restart():
-    global lives_left, all_sprites_list,wall_list,exit_list,exit_doors_list,player_list,overlay,enemy_list,player,draw_map
+    #exit_doors_list,
+    global lives_left, all_sprites_list,wall_list,exit_list,player_list,overlay,enemy_list,player,draw_map
     lives_left = 3
     # Create sprite group
     all_sprites_list = pygame.sprite.Group()
     wall_list = pygame.sprite.Group()
     exit_list = pygame.sprite.Group()
-    exit_doors_list = pygame.sprite.Group()
+    #exit_doors_list = pygame.sprite.Group()
     attack_sprites_list = pygame.sprite.Group()
     player_list = pygame.sprite.Group()
     overlay = Overlay()
