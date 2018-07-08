@@ -28,9 +28,9 @@ class Game():
         return self.running       
 
     def createPlayer(self, playerW, playerH, posX, posY):
-        player = Player(playerW, playerH, posX, posY)
-        self.player_list.add(player)
-        self.all_sprites_list.add(player)
+        self.player = Player(playerW, playerH, posX, posY)
+        self.player_list.add(self.player)
+        self.all_sprites_list.add(self.player)
 
     def update(self):
         self.all_sprites_list.update()
